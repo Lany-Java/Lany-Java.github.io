@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>second bolg</title>
+    <url>/2019/10/22/second-bolg/</url>
+    <content><![CDATA[<p>这是我的第二篇博客</p>
+]]></content>
+  </entry>
+  <entry>
     <title>test_my_site</title>
     <url>/2019/10/20/test-my-site/</url>
     <content><![CDATA[<h1 id="这个是我的第一篇博文测试"><a href="#这个是我的第一篇博文测试" class="headerlink" title="这个是我的第一篇博文测试"></a>这个是我的第一篇博文测试</h1><p>兰源<br>lanyuan<br>蓝云</p>
