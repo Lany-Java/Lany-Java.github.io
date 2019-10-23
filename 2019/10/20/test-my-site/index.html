@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="Lany&#39;s Blog">
 <meta property="og:description" content="这个是我的第一篇博文测试兰源lanyuan蓝云">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-22T10:29:58.533Z">
+<meta property="og:updated_time" content="2019-10-23T06:47:02.276Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -389,6 +389,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/20/test-my-site/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/10/20/test-my-site/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -526,6 +536,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
 
   
 
@@ -898,15 +915,48 @@
 
 
 
-
-
-
-
-
-      
-      
-       
+<!-- LOCAL: You can save these files to your site and update links -->
     
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'Lany-Java',
+            repo: 'Lany-Java.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '09d3fa3d8ecaadc9c6d9aa0419ff6411f171f359',
+            
+                client_id: '4217d58cc02ec7f68394'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
   
 
   <script type="text/javascript">
