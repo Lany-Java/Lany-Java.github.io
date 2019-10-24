@@ -76,7 +76,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="基础类型,包装类型," />
 
 
 
@@ -87,15 +87,18 @@
 
 
 
-<meta name="description" content="欲买桂花同载酒，终不似，少年游">
-<meta name="keywords" content="Java">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Lany&#39;s Blog">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;tags&#x2F;test&#x2F;index.html">
+<meta name="description" content="在Java中每个基本类型都对应了一个包装类型，他们之间可以通过自动装箱和自动拆箱自由的转化，但是他们之间是不同的，两者之间的差别在使用的时候可能会造成很严重的错误，所以我们在使用的时候要特别注意。他们之间主要区别以及注意事项有以下几点 包装类型值可以为NULL，但是基本类型不可以因为包装类型可以为NULL这一特点，使得包装类型可以应用于POJO类中，但是基本类型不可以。 这里POJO的全称为Pla">
+<meta name="keywords" content="基础类型,包装类型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈基本类型与包装类型的区别">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;24&#x2F;%E6%B5%85%E8%B0%88%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%8C%85%E8%A3%85%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB&#x2F;index.html">
 <meta property="og:site_name" content="Lany&#39;s Blog">
-<meta property="og:description" content="欲买桂花同载酒，终不似，少年游">
+<meta property="og:description" content="在Java中每个基本类型都对应了一个包装类型，他们之间可以通过自动装箱和自动拆箱自由的转化，但是他们之间是不同的，两者之间的差别在使用的时候可能会造成很严重的错误，所以我们在使用的时候要特别注意。他们之间主要区别以及注意事项有以下几点 包装类型值可以为NULL，但是基本类型不可以因为包装类型可以为NULL这一特点，使得包装类型可以应用于POJO类中，但是基本类型不可以。 这里POJO的全称为Pla">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;24&#x2F;%E6%B5%85%E8%B0%88%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%8C%85%E8%A3%85%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB&#x2F;stack_and_heap.jpg">
+<meta property="og:updated_time" content="2019-10-24T07:03:15.488Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;24&#x2F;%E6%B5%85%E8%B0%88%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%8C%85%E8%A3%85%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB&#x2F;stack_and_heap.jpg">
 
 
 
@@ -125,14 +128,14 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/test/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/10/24/浅谈基本类型和包装类的区别/"/>
 
 
 
 
 
 
-  <title>标签: test | Lany's Blog</title>
+  <title>浅谈基本类型与包装类型的区别 | Lany's Blog</title>
   
 
 
@@ -151,7 +154,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -299,54 +302,300 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>test<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/24/%E6%B5%85%E8%B0%88%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%8C%85%E8%A3%85%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lany">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/30362467?s=460&v=4">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lany's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/10/20/test-my-site/" itemprop="url">
-              
-                <span itemprop="name">test_my_site</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">浅谈基本类型与包装类型的区别</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-10-20T13:31:33+08:00"
-              content="2019-10-20" >
-          10-20
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-24T10:47:59+08:00">
+                2019-10-24
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/10/24/%E6%B5%85%E8%B0%88%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%8C%85%E8%A3%85%E7%B1%BB%E7%9A%84%E5%8C%BA%E5%88%AB/" class="leancloud_visitors" data-flag-title="浅谈基本类型与包装类型的区别">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  7 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    </div>
+      
 
+      
+        <p>在Java中每个基本类型都对应了一个包装类型，他们之间可以通过自动装箱和自动拆箱自由的转化，但是他们之间是不同的，两者之间的差别在使用的时候可能会造成很严重的错误，所以我们在使用的时候要特别注意。他们之间主要区别以及注意事项有以下几点</p>
+<h2 id="包装类型值可以为NULL，但是基本类型不可以"><a href="#包装类型值可以为NULL，但是基本类型不可以" class="headerlink" title="包装类型值可以为NULL，但是基本类型不可以"></a>包装类型值可以为NULL，但是基本类型不可以</h2><p>因为包装类型可以为NULL这一特点，使得包装类型可以应用于POJO类中，但是基本类型不可以。</p>
+<p>这里POJO的全称为<span class="label default">Plain Ordinary Java</span>,也就是无规则的Java对象，只有属性字段以及相应的setter和getter方法，比如：</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class User {</span><br><span class="line">    private Integer id;</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    public Integer getId() {</span><br><span class="line">        return id;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void setId(Integer id) {</span><br><span class="line">        this.id = id;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public String getName() {</span><br><span class="line">        return name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void setName(String name) {</span><br><span class="line">        this.name = name;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>与POJO相类似的还有数据传输对象DTO(Data Transfer Object，泛指用于展示层与服务层之间的数据传输对象)、视图对象VO(View Object，把某个页面的数据封装起来)、持久化对象PO(Persistant Object,可以看成是与数据库中的表映射的Java对象)</p>
+<p>包装数据类型的默认初始值是null，而基本数据类型的默认初始值则不是，比如int初始值为0，double初始值为0.0，等等，在数据库中，所有SQL默认值都是null，如果我们把POJO中的映射属性类型写为基本类型，当查找不到记录的时候，返回null赋给基本类型就会出错，这个时候我们只有使用包装类型才能保证不会出现这样的错误</p>
+<p>在《阿里巴巴的Java开发手册中》有这样的说明</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">数据库的查询结果可能是null，如果使用基本类型的话，因为要自动拆箱(将包装类型转化为基本类型，比如说把Integer对象转化为int值)，</span><br><span class="line"></span><br><span class="line">就会抛出NPE(NullPointerException)的异常</span><br></pre></td></tr></tbody></table></figure>
+
+<p>所以在阿里巴巴的Java开发手册中强制规定了基本数据类型和包装数据类型的使用标准如下：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">（1） 所有的POJO类属性必须使用包装数据类型。</span><br><span class="line"></span><br><span class="line">（2） RPC方法的返回值和参数必须使用包装数据类型。</span><br><span class="line"></span><br><span class="line">（3） 所有的局部变量推荐使用基本数据类型。</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="包装类型可以用在泛型之中，但是基本类型不可以"><a href="#包装类型可以用在泛型之中，但是基本类型不可以" class="headerlink" title="包装类型可以用在泛型之中，但是基本类型不可以"></a>包装类型可以用在泛型之中，但是基本类型不可以</h2><p>泛型不能使用基本类型，如果使用了基本类型，那么在编译的时候将会报错</p>
+<p>错误写法：</p>
+<div class="note danger"><p>List<int> list = new ArrayList&lt;&gt;();</int></p></div>
+
+<p>正确写法：</p>
+<div class="note default"><p>List<integer> list = new ArrayList&lt;&gt;();</integer></p></div>
+
+<p>造成这种结果的原因是因为泛型在编译时会进行类型擦除，最后只保留原始类型，而原始类型只能是Object及其子类。</p>
+<h2 id="基本类型相较于包装类型更加的高效"><a href="#基本类型相较于包装类型更加的高效" class="headerlink" title="基本类型相较于包装类型更加的高效"></a>基本类型相较于包装类型更加的高效</h2><p>基本类型相较于包装类型更加的高效，因为基本类型在栈中直接储存的具体数值，而包装类型则在栈中储存的是对堆中的引用(即在堆中的地址)</p>
+<p><img src="stack_and_heap.jpg" alt=""></p>
+<p>很显然，包装类型在堆中还要占用内存，它需要占据更多的内存空间，对于我们经常要用到的局部变量来说，每次如果都要new一个包装类型就会显得十分的笨重，所以在阿里巴巴Java开发手册中，对于局部变量更加推荐使用基本数据类型</p>
+<h2 id="两个包装类型的值可以相同，但是却不相等"><a href="#两个包装类型的值可以相同，但是却不相等" class="headerlink" title="两个包装类型的值可以相同，但是却不相等"></a>两个包装类型的值可以相同，但是却不相等</h2><p>首先我们来看一段代码</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Integer a = new Integer(10);</span><br><span class="line">Integer b = new Integer(10);</span><br><span class="line"></span><br><span class="line">System.out.println(a == b);   //输出为false</span><br><span class="line">System.out.println(a.equals(b));    //输出为true</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用“==”的时候，我们比较的是栈内存中的内容，所以对于类对象，使用“==”比较的是他们在内存中指向的地址是否相同，而对于基本数据类型，使用“==”则比较的是他们的值是否相同，所以第一个结果是false</p>
+<p>使用equals函数进行比较则比较的是他们的值，所以第二个结果是ture</p>
+<p>综上所述我们在进行包装类的比较时，如果使用“==”那么结果可能会出人意料</p>
+<h2 id="自动装箱与自动拆箱"><a href="#自动装箱与自动拆箱" class="headerlink" title="自动装箱与自动拆箱"></a>自动装箱与自动拆箱</h2><p>首先来谈谈两个的概念：<br>自动装箱：将基本类型转换为包装类型<br>自动拆箱：将包装类型转换为基本类型</p>
+<p>在JavaSE5之前，我们是要手动拆装箱的:</p>
+<div class="note default"><p>Integer integer = new Integer(10); //手动装箱<br>int i = integer.intValue();        //手动拆箱</p></div>
+
+<p>但是在JavaSE5之后，就提供了自动拆装箱的功能:</p>
+<div class="note default"><p>Integer integer  = 10;  // 自动装箱<br>int i = integer;        // 自动拆箱</p></div>
+
+<p>自动拆装箱反编译之后：</p>
+<div class="note default"><p>Integer integer = Integer.valueOf(10);<br>int i = integer.intValue();</p></div>
+
+<p>现在我们来看三段代码</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// 基本类型和包装类型的比较</span><br><span class="line">int a = 100;</span><br><span class="line">Integer b = 100;</span><br><span class="line">System.out.println(a == b);</span><br><span class="line"></span><br><span class="line">// 两个包装类型的比较</span><br><span class="line">Integer c = 100;              //这里和第四点不一样的赋值不一样哦</span><br><span class="line">Integer d = 100;</span><br><span class="line">System.out.println(c == d);</span><br><span class="line"></span><br><span class="line">// 两个基本类型的比较</span><br><span class="line">c = 200;</span><br><span class="line">d = 200;</span><br><span class="line">System.out.println(c == d);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>第一段：<strong>基本类型</strong>和<strong>包装类型</strong>的比较</p>
+<div class="note primary"><p>结果：true</p></div>
+
+<p>第二段：<strong>包装类型</strong>与<strong>包装类型</strong>之间的比较(<strong>对包装类型直接赋值，不是使用new Integer()</strong>)</p>
+<div class="note primary"><p>结果：true</p></div>
+
+<p>第三段：<strong>包装类型</strong>和<strong>包装类型</strong>之间进行比较(<strong>重新赋值200之后</strong>)</p>
+<div class="note primary"><p>结果：false</p></div>
+
+<p>这三次比较的结果是true，true，false，可能你会有点意外，现在我们来看看这是为什么？</p>
+<p>通过前面我们观察自动拆装箱的反编译结果，我们可以知道，自动装箱是通过<span class="label default">Integer.valueOf</span>完成的，那我们就来看看这个方法的源码</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static Integer valueOf(int i) {</span><br><span class="line">    if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        return IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    return new Integer(i);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>从这个方法的源码中我们可以明显的看到IntegerCache起到了很重要的作用，那这个时候我们又来看看IntegerCache是什么：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">private static class IntegerCache {</span><br><span class="line">    static final int low = -128;</span><br><span class="line">    static final int high;</span><br><span class="line">    static final Integer cache[];</span><br><span class="line"></span><br><span class="line">    static {</span><br><span class="line">        // high value may be configured by property</span><br><span class="line">        int h = 127;</span><br><span class="line">        int i = parseInt(integerCacheHighPropValue);</span><br><span class="line">        i = Math.max(i, 127);</span><br><span class="line">        h = Math.min(i, Integer.MAX_VALUE - (-low) -1);</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = new Integer[(high - low) + 1];</span><br><span class="line">        int j = low;</span><br><span class="line">        for(int k = 0; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = new Integer(j++);</span><br><span class="line"></span><br><span class="line">        // range [-128, 127] must be interned (JLS7 5.1.7)</span><br><span class="line">        assert IntegerCache.high &gt;= 127;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>从这段代码中我们可以看出-128到127之间的数会从IntegerCache中取值，<strong>即对于-128到127之间的数，会进行缓存，例如Integer i = 127时，会将127进行缓存，下次在写Integer j = 127的时候，就会直接从缓存中取，就不会new了，如果超过128就会重新new一个对象</strong></p>
+<div class="note default"><p>所以在我们这个问题中:</p>
+<p>第一段是因为，当包装类型和基本类型进行比较时，会进行自动拆箱，是二者的值进行的比较，所以结果是true，</p>
+<p>第二段是因为，100是在-128到127之间，d指向的是缓存中的对象，和c指向的是同一个对象，所以结果是true</p>
+<p>第三段是因为，200超过了127，c和d都是重新new Integer(200)，且是不同的对象，所以结果是false</p></div>
+
+<p>看完了这么多，提炼一下，在这种会进行自动拆装箱的问题中，我们需要注意的是：</p>
+<blockquote class="blockquote-center"><p>当需要进行自动装箱的时候，如果数字在-128到127之间，会直接使用缓存中的对象，而不是重新创建一个对象，如果数字大于或者小于这两个，那么是会重新创建一个对象的</p>
+</blockquote>
+
+<p>Ps:<br><br>本文参考自：<a href="https://juejin.im/post/5d8ff563f265da5bb252de76" target="_blank" rel="noopener">https://juejin.im/post/5d8ff563f265da5bb252de76</a></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%9F%BA%E7%A1%80%E7%B1%BB%E5%9E%8B/" rel="tag"># 基础类型</a>
+          
+            <a href="/tags/%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B/" rel="tag"># 包装类型</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/23/%E7%94%A8GitHub-Hexo%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/" rel="next" title="用GitHub+Hexo从零搭建一个博客">
+                <i class="fa fa-chevron-left"></i> 用GitHub+Hexo从零搭建一个博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -354,6 +603,17 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
 
         </div>
         
@@ -374,8 +634,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -485,6 +754,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#包装类型值可以为NULL，但是基本类型不可以"><span class="nav-number">1.</span> <span class="nav-text">包装类型值可以为NULL，但是基本类型不可以</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包装类型可以用在泛型之中，但是基本类型不可以"><span class="nav-number">2.</span> <span class="nav-text">包装类型可以用在泛型之中，但是基本类型不可以</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本类型相较于包装类型更加的高效"><span class="nav-number">3.</span> <span class="nav-text">基本类型相较于包装类型更加的高效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两个包装类型的值可以相同，但是却不相等"><span class="nav-number">4.</span> <span class="nav-text">两个包装类型的值可以相同，但是却不相等</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动装箱与自动拆箱"><span class="nav-number">5.</span> <span class="nav-text">自动装箱与自动拆箱</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -651,6 +936,12 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/photoswipe.min.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/photoswipe-ui-default.min.js?v=5.1.4"></script>
+
+
 
   
 
@@ -697,6 +988,28 @@
 
     
 
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitment({
+            id: window.location.pathname, 
+            owner: 'Lany-Java',
+            repo: 'Lany-Java.github.io',
+            
+            oauth: {
+            
+            
+                client_secret: '09d3fa3d8ecaadc9c6d9aa0419ff6411f171f359',
+            
+                client_id: '4217d58cc02ec7f68394'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
     
 
 
