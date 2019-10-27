@@ -1,6 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Java内部类</title>
+    <url>/2019/10/26/Java%E5%86%85%E9%83%A8%E7%B1%BB/</url>
+    <content><![CDATA[<h1 id="什么是内部类？"><a href="#什么是内部类？" class="headerlink" title="什么是内部类？"></a>什么是内部类？</h1><p>来自《Java核心技术 卷一》之中的定义：</p>
+<div class="note default"><p>内部类是定义在另一个类中的类</p></div>
+
+<h1 id="为什么我们要使用内部类？"><a href="#为什么我们要使用内部类？" class="headerlink" title="为什么我们要使用内部类？"></a>为什么我们要使用内部类？</h1><p>在某些情况下使用内部类会有很好的效果，主要好处有如下几点：<a id="more"></a></p>
+<div class="note default"><ol>
+<li>内部类方法可以访问该类定义所在作用域中的数据，<strong>包括私有数据</strong></li>
+<li>内部类可以对同一包中的其他类隐藏起来</li>
+<li>内部类可以解决 java 单继承的缺陷，从而实现多继承</li>
+<li>当想要定义一个回调函数并且不想编写大量代码时，使用匿名内部类比较便捷</li>
+</ol></div>
+
+<h2 id="1-内部类方法可以访问该类定义所在作用域中的数据"><a href="#1-内部类方法可以访问该类定义所在作用域中的数据" class="headerlink" title="1.内部类方法可以访问该类定义所在作用域中的数据"></a>1.内部类方法可以访问该类定义所在作用域中的数据</h2><p>我们下面来看一个实例：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class TalkingClock {</span><br><span class="line">    private int interval;   //时间间隔</span><br><span class="line">    private boolean beep;	//标志位</span><br><span class="line"></span><br><span class="line">    public TalkingClock(int interval,boolean beep){</span><br><span class="line">		...</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void start(){</span><br><span class="line">		...</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public class TimePrinter implements ActionListener{</span><br><span class="line">        @Override</span><br><span class="line">        public void actionPerformed(ActionEvent e) {</span><br><span class="line">            System.out.println("At the tone, the time is" + new Date());</span><br><span class="line">            if(beep){</span><br><span class="line">                Toolkit.getDefaultToolkit().beep();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们观察TimePrinter中的方法使用了beep变量，但是在TimePrinter类中没有实例域或者名为beep的变量，相反的是beep是引用的创建TimePrinter的TalkingClock对象的域，这是一种很创新的想法。</p>
+<p>按传统意义来讲，一个方法可以引用调用这个方法的对象数据域。按照这样的思想，内部类既可以访问自身的数据域，也可以访问创建它的外部类对象的数据域。为了实现这一点，<strong>内部类的对象总有一个隐式引用，它指向了创建它的外部类对象</strong><br><img src="%E5%AF%B9%E5%A4%96%E9%83%A8%E7%B1%BB%E7%9A%84%E9%9A%90%E5%BC%8F%E5%BC%95%E7%94%A8.jpg" alt=""></p>
+<p>这个引用在内部类的定义中是不可见的，外部类的引用是在构造器中设置。编译器修改了所有内部类的构造器，添加一个外部类引用的参数 ，因为TimePrinter类没有定义构造器，所以编译器为这个类生成了一个默认的构造器:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public TimePrinter(TalkingClock clock){</span><br><span class="line">	outer = clock;             //这里outer不是关键字，只是用来说明内部类中的机制</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>当外部类对象创建了TimePrinter对象后，编译器就会将this引用传递给当前的TimePrinter构造器,<strong>通过这个隐式引用，我们可以访问外部类对象的数据域</strong>:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">ActionListener listener = new TimePrinter(this);</span><br></pre></td></tr></tbody></table></figure>
+
+<div class="note default"><p>另外注意内部类只是一种编译器现象，与虚拟机无关。编译器会将内部类编译成 外部类名$内部类名 的常规文件，虚拟机对此一无所知。</p></div>
+
+<h2 id="2-内部类可以对同一包中的其他类隐藏起来"><a href="#2-内部类可以对同一包中的其他类隐藏起来" class="headerlink" title="2.内部类可以对同一包中的其他类隐藏起来"></a>2.内部类可以对同一包中的其他类隐藏起来</h2><p>内部类和普通类有一个区别在于，普通类的修饰符不能是protected和private，<strong>而内部类的修饰符可以使用private和protected来修饰</strong>，这时候我们如果使用private来修饰内部类，那么这时内部类对外就被隐藏了。</p>
+<p>内部类对外隐藏看似好像作用不大，其实在我们需要隐藏接口的实现的时候，内部类这一特性就起到了十分关键的作用。</p>
+<p>那么我们为什么要隐藏接口的实现？隐藏接口的实现又有什么好处呢？</p>
+<div class="note default"><p>我们隐藏接口的实现，就解决了继承以及实现接口后可能造成出现同名方法的问题</p></div>
+
+<p>现在我们来看一个例子去更好的理解内部类对其他类隐藏起来了的好处：<br>一个接口Demo，中间有一个test()方法</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public interface Demo {</span><br><span class="line">    void test();      </span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一个类MyDemo,中间也有一个test()方法</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class MyDemo {</span><br><span class="line">  ​</span><br><span class="line">    public void test() {</span><br><span class="line">        System.out.println("父类的test方法");</span><br><span class="line">    }</span><br><span class="line">      </span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一个测试类</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class DemoTest extends MyDemo implements Demo {</span><br><span class="line">    public void test() {</span><br><span class="line">		</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们看测试类DemoTest继承了MyDemo，实现了Demo接口，而二者又都同时含有test方法，那么测试类DemoTest中的test()方法是覆写的谁的呢？这个时候我们就没法区分出这个方法是接口的还是继承的了，所以我们要使用内部类来解决这个问题：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class DemoTest extends MyDemo {</span><br><span class="line">  ​</span><br><span class="line">  ​</span><br><span class="line">    private class inner implements Demo {</span><br><span class="line">	    public void test() {</span><br><span class="line">		    System.out.println("接口的test方法");</span><br><span class="line">	    }</span><br><span class="line">    }</span><br><span class="line">  </span><br><span class="line">    public Demo getIn() {</span><br><span class="line">	    return new inner();</span><br><span class="line">    }</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">	    //调用接口而来的test()方法</span><br><span class="line">	    DemoTest dt = new DemoTest();</span><br><span class="line">	    Demo d = dt.getIn();</span><br><span class="line">	    d.test();</span><br><span class="line">	   </span><br><span class="line">	    //调用继承而来的test()方法</span><br><span class="line">	    dt.test();</span><br><span class="line">    }</span><br><span class="line">  }</span><br></pre></td></tr></tbody></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">接口的test方法</span><br><span class="line">父类的test方法</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到这时候因为同名造成的矛盾已经被解决了，在上面这段代码中，我们只知道DemoTest类中的getIn方法能返回一个Demo接口的实例，但是我们并不知道这个实例是怎么实现的，而且由于inner类是private的，所以如果我们不看源代码的话，我们根本就看不到这个具体类的名字，所以说他可以很好的实现隐藏</p>
+<h2 id="3-内部类可以实现-java-单继承的缺陷"><a href="#3-内部类可以实现-java-单继承的缺陷" class="headerlink" title="3.内部类可以实现 java 单继承的缺陷"></a>3.内部类可以实现 java 单继承的缺陷</h2><p>我们都知道Java当中是只有单继承，没有多继承的，我们虽然可以使用实现多接口来解决没有多继承的问题，但是接口实现多了也会造成一些不方便的地方，比兔实现一个接口就必须实现它里面的所有方法，而我们使用内部类可以使我们的类继承多个具体的类或者抽象类，<strong>内部类的引入让我使得多继承的实现成为了可能</strong>，它使得我们从另外一个角度去实现了多继承</p>
+<p>我们来看一下这个例子：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">//类一</span><br><span class="line">public class ClassA {</span><br><span class="line">   public String name(){</span><br><span class="line">       return "liutao";</span><br><span class="line">   }</span><br><span class="line">   public String doSomeThing(){</span><br><span class="line">    // doSomeThing</span><br><span class="line">   }</span><br><span class="line">}</span><br><span class="line">//类二</span><br><span class="line">public class ClassB {</span><br><span class="line">    public int age(){</span><br><span class="line">        return 25;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">//类三</span><br><span class="line">public class MainExample{</span><br><span class="line">   private class Test1 extends ClassA{</span><br><span class="line">        public String name(){</span><br><span class="line">          return super.name();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    private class Test2 extends ClassB{</span><br><span class="line">       public int age(){</span><br><span class="line">         return super.age();</span><br><span class="line">       }</span><br><span class="line">    }</span><br><span class="line">   public String name(){</span><br><span class="line">    return new Test1().name();</span><br><span class="line">   }</span><br><span class="line">   public int age(){</span><br><span class="line">       return new Test2().age();</span><br><span class="line">   }</span><br><span class="line">   public static void main(String args[]){</span><br><span class="line">       MainExample mi=new MainExample();</span><br><span class="line">       System.out.println("姓名:"+mi.name());</span><br><span class="line">       System.out.println("年龄:"+mi.age());</span><br><span class="line">   }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以通过上面的例子看出来，MainExample类中的两个内部类分别继承了ClassA和ClassB，MainExample类通过这两个内部类间接实现了和ClassA还有ClassB的继承关系，而且我们也不用去关心ClassA的doSomeThing方法的实现，这是我们通过内部类实现多继承比实现接口更好的地方。</p>
+<h2 id="4-当想要定义一个回调函数并且不想编写大量代码时，使用匿名内部类比较便捷"><a href="#4-当想要定义一个回调函数并且不想编写大量代码时，使用匿名内部类比较便捷" class="headerlink" title="4.当想要定义一个回调函数并且不想编写大量代码时，使用匿名内部类比较便捷"></a>4.当想要定义一个回调函数并且不想编写大量代码时，使用匿名内部类比较便捷</h2><p>我们用通俗讲解就是说在Java中，通常就是编写一个接口，然后你来实现这个接口，然后把这个接口的一个对象作以参数的形式传到另一个程序方法中， 然后通过接口调用你的方法，匿名内部类就可以很好的展现了这一种回调功能</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public interface Demo {</span><br><span class="line">    void demoMethod();</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">public class MyDemo{</span><br><span class="line">    public test(Demo demo){</span><br><span class="line">	    System.out.println("test method");</span><br><span class="line">    }</span><br><span class="line">  </span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">	    MyDemo md = new MyDemo();</span><br><span class="line">	    //这里我们使用匿名内部类的方式将接口对象作为参数传递到test方法中去了</span><br><span class="line">	    md.test(new Demo){</span><br><span class="line">		    public void demoMethod(){</span><br><span class="line">		  	  System.out.println("具体实现接口")</span><br><span class="line">		    }</span><br><span class="line">	    }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="内部类的分类"><a href="#内部类的分类" class="headerlink" title="内部类的分类"></a>内部类的分类</h1><h2 id="1-局部内部类"><a href="#1-局部内部类" class="headerlink" title="1.局部内部类"></a>1.局部内部类</h2><div class="note default"><p>如果一个内部类只在一个方法中使用到了，那么我们可以将这个类定义在方法内部，这种内部类被称为局部内部类。其作用域仅限于该方法。</p></div>
+
+<p>局部类有几点值得我们注意的地方：</p>
+<div class="note default"><ol>
+<li>局部内类不允许使用访问权限修饰符，public private protected 均不允许</li>
+<li>局部内部类对外完全隐藏，除了创建这个类的方法可以访问它，其他的地方是不允许访问的。</li>
+<li>局部内部类与成员内部类不同之处是他可以引用成员变量，但该成员必须声明为 final，并内部不允许修改该变量的值。（这句话并不准确，因为如果不是基本数据类型的时候，只是不允许修改引用指向的对象，而对象本身是可以被就修改的）</li>
+</ol></div>
+
+<p>局部类只能访问他所在的方法的final局部变量，如果我们访问了非final变量，编译器会提示你讲变量声明为final。局部变量的声明周期与局部内部类的对象的生命周期不一致。局部变量当所处的函数执行结束后就已经死亡了，但是局部内部类对象还可能一直存在(只要有人还引用该对象)，这就是会出现了一个悲剧的结果，局部内部类对象访问一个已经不存在的局部变量。那么编译器会将外部的final变量在编译阶段就作为内部类的成员变量写入内部类</p>
+<p>原始类：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class S2 {</span><br><span class="line"> </span><br><span class="line">    public void outerDoSomething() {</span><br><span class="line">        final String localObj = "hello";</span><br><span class="line">        class InnerClass {</span><br><span class="line">            public void innerDoSomething() {</span><br><span class="line">                String a = localObj;</span><br><span class="line">                System.out.println(a);</span><br><span class="line">            }</span><br><span class="line">        };</span><br><span class="line"> </span><br><span class="line">        InnerClass innerObj = new InnerClass();</span><br><span class="line">        innerObj.innerDoSomething();</span><br><span class="line">    }</span><br><span class="line"> </span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">        S2 s2 = new S2();</span><br><span class="line">        s2.outerDoSomething();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>编译之后的class文件：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class S2 {</span><br><span class="line">    public S2() {</span><br><span class="line">    }</span><br><span class="line"> </span><br><span class="line">    public void outerDoSomething() {</span><br><span class="line">        String localObj = "hello";</span><br><span class="line">        class InnerClass {</span><br><span class="line">            InnerClass() {</span><br><span class="line">            }</span><br><span class="line"> </span><br><span class="line">            public void innerDoSomething() {</span><br><span class="line">                String a = "hello";</span><br><span class="line">                System.out.println(a);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"> </span><br><span class="line">        InnerClass innerObj = new InnerClass();</span><br><span class="line">        innerObj.innerDoSomething();</span><br><span class="line">    }</span><br><span class="line"> </span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">        S2 s2 = new S2();</span><br><span class="line">        s2.outerDoSomething();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>所以访问外部的final变量，在编译器就放入内部类了，与外部无关。所以访问安全。</p>
+<h2 id="2-成员内部类"><a href="#2-成员内部类" class="headerlink" title="2.成员内部类"></a>2.成员内部类</h2><div class="note default"><p>成员内部类就是最普通的内部类，它定义在一个类的内部中，就如同一个成员变量一样。</p></div>
+
+<ul>
+<li>在内部类中，直接使用变量名，会按照从方法中的局部变量、到局部类的变量、到外部类的变量的顺序访问(就近原则)</li>
+<li>如果想在方法中强制访问内部类的成员变量/方法，可以使用<span class="label default">this.变量名</span>，这里的this表示当前内部类对象</li>
+<li>如果想在方法中强制访问外部类的成员变量/方法，可以使用<span class="label default">外部类名.this.变量名</span>，这里的<span class="label default">外部类名.this</span>表示当前外部类对象</li>
+</ul>
+<p>成员内部类和外部类的成员一样，可以使用4种权限修饰符来修饰，但是有一个限制：<strong>成员内部类不能创建静态变量/方法</strong></p>
+<p>那为什么会这样呢？</p>
+<div class="note default"><p>因为要使用一个类的静态成员，需要先把这个类加载到虚拟机中，而成员内部类是需要由外部类对象 new 一个实例才可以使用，这就无法做到静态成员的要求。</p></div>
+
+
+<h2 id="3-匿名内部类"><a href="#3-匿名内部类" class="headerlink" title="3.匿名内部类"></a>3.匿名内部类</h2><p>我们先来看一段最常见的代码</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">Car jeep = new Car();</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在Java中，可以将jeep抽象的理解为Car对象的”名字”，而匿名内部类顾名思义可以抽象的理解为没有名字的”内部类”</p>
+<p>匿名内部类的特点：</p>
+<div class="note default"><ol>
+<li>一个类用于继承其他类或是实现接口，并不需要增加额外的方法，只是对继承方法的事先或是覆盖。</li>
+<li>类名没有意义，也就是不需要使用到。</li>
+<li>匿名内部类是没有访问修饰符的。</li>
+<li>匿名内部类中不能存在任何静态成员或方法</li>
+<li>匿名内部类是没有构造方法的，因为它没有类名。</li>
+<li>与局部内部相同匿名内部类也可以引用局部变量。此变量也必须声明为 final</li>
+<li>匿名内部类是没有构造方法的，因为它没有类名</li>
+</ol></div>
+
+<p>现在我们来看一个匿名内部类：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class Button {</span><br><span class="line">    public void click(final int params){</span><br><span class="line">        //匿名内部类，实现的是ActionListener接口</span><br><span class="line">        new ActionListener(){</span><br><span class="line">            public void onAction(){</span><br><span class="line">                System.out.println("click action..." + params);</span><br><span class="line">            }</span><br><span class="line">        }.onAction();</span><br><span class="line">    }</span><br><span class="line">    //匿名内部类必须继承或实现一个已有的接口</span><br><span class="line">    public interface ActionListener{</span><br><span class="line">        public void onAction();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">        Button button=new Button();</span><br><span class="line">        button.click();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>匿名内部类在开发中的使用：</p>
+<p>我们在开发的时候，会看到抽象类，或者接口作为参数。而这个时候，实际需要的是一个子类对象。如果该方法仅仅调用一次，我们就可以使用匿名内部类的格式简化。</p>
+<h2 id="4-静态内部类"><a href="#4-静态内部类" class="headerlink" title="4.静态内部类"></a>4.静态内部类</h2><p>对于一般的类，我们知道是不能使用static来修饰的，但是成员内部类可以看做外部类中的一个成员，所以可以用static修饰，这种用static修饰的内部类我们称作静态内部类,也称作嵌套内部类.</p>
+<p>特点：<br>    - 不能使用外部类的非static成员变量和成员方法，只能访问静态的外部属性和方法<br>    - 非静态内部类编译后会默认的保存一个指向外部类的引用，而静态类却没有</p>
+<p>一个静态内部类    </p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">class Outter {</span><br><span class="line">    int age = 10;</span><br><span class="line">    static age2 = 20;</span><br><span class="line">    public Outter() {        </span><br><span class="line">    }</span><br><span class="line">     </span><br><span class="line">    static class Inner {</span><br><span class="line">        public method() {</span><br><span class="line">            System.out.println(age);//错误</span><br><span class="line">            System.out.println(age2);//正确</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line">  ​</span><br><span class="line">public class Test {</span><br><span class="line">    public static void main(String[] args)  {</span><br><span class="line">        Outter.Inner inner = new Outter.Inner();</span><br><span class="line">        inner.method();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure><script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>内部类</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>为什么Java中只有值传递</title>
     <url>/2019/10/25/%E4%B8%BA%E4%BB%80%E4%B9%88Java%E4%B8%AD%E5%8F%AA%E6%9C%89%E5%80%BC%E4%BC%A0%E9%80%92/</url>
     <content><![CDATA[<h1 id="JAVA中的参数传递"><a href="#JAVA中的参数传递" class="headerlink" title="JAVA中的参数传递"></a>JAVA中的参数传递</h1><p><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8">❓</span>&nbsp;&nbsp;&nbsp;在JAVA的学习中，我们或许经常性的会遇到把对象作为一个参数传递给方法，那么自然就会产生一个问题，这到底是值传递，还是引用传递呢？<br><br>或许很多人都会觉得是引用传递，但其实我们都错了！</p>
@@ -262,60 +396,6 @@
       <tags>
         <tag>Blog</tag>
         <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>second bolg</title>
-    <url>/2019/10/22/second-bolg/</url>
-    <content><![CDATA[<p>这是我的第二篇博客</p>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
-  </entry>
-  <entry>
-    <title>test_my_site</title>
-    <url>/2019/10/20/test-my-site/</url>
-    <content><![CDATA[<h1 id="这个是我的第一篇博文测试"><a href="#这个是我的第一篇博文测试" class="headerlink" title="这个是我的第一篇博文测试"></a>这个是我的第一篇博文测试</h1><p>兰源<br>lanyuan<br>蓝云</p>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>test</tag>
       </tags>
   </entry>
 </search>
