@@ -87,16 +87,19 @@
 
 
 
-<meta name="description" content="基本用法和快捷键Debug调试的功能主要对应着两组按钮 1. 首先是第一组，一共八个按钮，从左至右一次如下     ![第一组](first.png)      - show Execution Point(Alt+F10)：如果你的光标在其它行或其它页面，点击这个按钮可跳转到当前代码执行的行。     - Step Over (F8)：步过，一行一行地往下走，如果这一行上有方法不会进入方法。">
+<meta name="description" content="基本用法和快捷键Debug调试的功能主要对应着两组按钮  首先是第一组，一共八个按钮，从左至右一次如下   show Execution Point(Alt+F10)：如果你的光标在其它行或其它页面，点击这个按钮可跳转到当前代码执行的行。 Step Over (F8)：步过，一行一行地往下走，如果这一行上有方法不会进入方法。 Step Into (F7)：步入，如果当前行有方法，可以进入方法内部，">
 <meta name="keywords" content="IDEA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IDEA中使用Debug功能">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;28&#x2F;IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8Debug%E5%8A%9F%E8%83%BD&#x2F;index.html">
 <meta property="og:site_name" content="Lany&#39;s Blog">
-<meta property="og:description" content="基本用法和快捷键Debug调试的功能主要对应着两组按钮 1. 首先是第一组，一共八个按钮，从左至右一次如下     ![第一组](first.png)      - show Execution Point(Alt+F10)：如果你的光标在其它行或其它页面，点击这个按钮可跳转到当前代码执行的行。     - Step Over (F8)：步过，一行一行地往下走，如果这一行上有方法不会进入方法。">
+<meta property="og:description" content="基本用法和快捷键Debug调试的功能主要对应着两组按钮  首先是第一组，一共八个按钮，从左至右一次如下   show Execution Point(Alt+F10)：如果你的光标在其它行或其它页面，点击这个按钮可跳转到当前代码执行的行。 Step Over (F8)：步过，一行一行地往下走，如果这一行上有方法不会进入方法。 Step Into (F7)：步入，如果当前行有方法，可以进入方法内部，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-28T07:16:21.403Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;28&#x2F;IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8Debug%E5%8A%9F%E8%83%BD&#x2F;first.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;28&#x2F;IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8Debug%E5%8A%9F%E8%83%BD&#x2F;second.png">
+<meta property="og:updated_time" content="2019-10-28T07:22:31.049Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;28&#x2F;IDEA%E4%B8%AD%E4%BD%BF%E7%94%A8Debug%E5%8A%9F%E8%83%BD&#x2F;first.png">
 
 
 
@@ -408,7 +411,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  632 字
+                  620 字
                 </span>
               
 
@@ -446,28 +449,32 @@
 
       
         <h2 id="基本用法和快捷键"><a href="#基本用法和快捷键" class="headerlink" title="基本用法和快捷键"></a>基本用法和快捷键</h2><p>Debug调试的功能主要对应着两组按钮</p>
-<pre><code>1. 首先是第一组，一共八个按钮，从左至右一次如下
-    ![第一组](first.png)
-
-    - show Execution Point(Alt+F10)：如果你的光标在其它行或其它页面，点击这个按钮可跳转到当前代码执行的行。
-    - Step Over (F8)：步过，一行一行地往下走，如果这一行上有方法不会进入方法。
-    - Step Into (F7)：步入，如果当前行有方法，可以进入方法内部，一般用于进入自定义方法内，不会进入官方类库的方法，如第25行的put方法。
-    - Force Step Into (Alt + Shift + F7)：强制步入，能进入任何方法，查看底层源码的时候可以用这个进入官方类库的方法。
-    - Step Out (Shift + F8)：步出，从步入的方法内退出到方法调用处，此时方法已执行完毕，只是还没有完成赋值。
-    - Drop Frame (默认无)：回退断点，后面章节详细说明。
-    - Run to Cursor (Alt + F9)：运行到光标处，你可以将光标定位到你需要查看的那一行，然后使用这个功能，代码会运行至光标行，而不需要打断点。
-    - Evaluate Expression (Alt + F8)：计算表达式
-
-2. 第二组按钮
-
-    ![第二组](second.png)
-
-    - Rerun 'xxxx'：重新运行程序，会关闭服务后重新启动程序。
-    - Resume Program (F9)：恢复程序，比如，你在第20行和25行有两个断点，当前运行至第20行，按F9，则运行到下一个断点(即第25行)，再按F9，则运行完整个流程，因为后面已经没有断点了
-    - Pause Program：暂停程序，启用Debug。目前没发现具体用法。
-    - Stop 'xxx' (Ctrl + F2)：连续按两下，关闭程序。有时候你会发现关闭服务再启动时，报端口被占用，这是因为没完全关闭服务的原因，你就需要查杀所有JVM进程了
-    - View Breakpoints (Ctrl + Shift + F8)：查看所有断点
-    - Mute Breakpoints：哑的断点，选择这个后，所有断点变为灰色，断点失效，按F9则可以直接运行完程序。再次点击，断点变为红色，有效。如果只想使某一个断点失效，可以在断点上右键取消Enabled</code></pre><script>
+<ol>
+<li><p>首先是第一组，一共八个按钮，从左至右一次如下<br> <img src="first.png" alt=""></p>
+<ul>
+<li>show Execution Point(Alt+F10)：如果你的光标在其它行或其它页面，点击这个按钮可跳转到当前代码执行的行。</li>
+<li>Step Over (F8)：步过，一行一行地往下走，如果这一行上有方法不会进入方法。</li>
+<li>Step Into (F7)：步入，如果当前行有方法，可以进入方法内部，一般用于进入自定义方法内，不会进入官方类库的方法，如第25行的put方法。</li>
+<li>Force Step Into (Alt + Shift + F7)：强制步入，能进入任何方法，查看底层源码的时候可以用这个进入官方类库的方法。</li>
+<li>Step Out (Shift + F8)：步出，从步入的方法内退出到方法调用处，此时方法已执行完毕，只是还没有完成赋值。</li>
+<li>Drop Frame (默认无)：回退断点，后面章节详细说明。</li>
+<li>Run to Cursor (Alt + F9)：运行到光标处，你可以将光标定位到你需要查看的那一行，然后使用这个功能，代码会运行至光标行，而不需要打断点。</li>
+<li>Evaluate Expression (Alt + F8)：计算表达式</li>
+</ul>
+</li>
+<li><p>第二组按钮</p>
+<p> <img src="second.png" alt=""></p>
+<ul>
+<li>Rerun ‘xxxx’：重新运行程序，会关闭服务后重新启动程序。</li>
+<li>Resume Program (F9)：恢复程序，比如，你在第20行和25行有两个断点，当前运行至第20行，按F9，则运行到下一个断点(即第25行)，再按F9，则运行完整个流程，因为后面已经没有断点了</li>
+<li>Pause Program：暂停程序，启用Debug。目前没发现具体用法。</li>
+<li>Stop ‘xxx’ (Ctrl + F2)：连续按两下，关闭程序。有时候你会发现关闭服务再启动时，报端口被占用，这是因为没完全关闭服务的原因，你就需要查杀所有JVM进程了</li>
+<li>View Breakpoints (Ctrl + Shift + F8)：查看所有断点</li>
+<li>Mute Breakpoints：哑的断点，选择这个后，所有断点变为灰色，断点失效，按F9则可以直接运行完程序。再次点击，断点变为红色，有效。如果只想使某一个断点失效，可以在断点上右键取消Enabled</li>
+</ul>
+</li>
+</ol>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
