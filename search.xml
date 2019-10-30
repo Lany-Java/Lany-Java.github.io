@@ -116,7 +116,76 @@
 <p>抽象类可以实现多个接口<br>抽象类可以继承抽象类</p></div>
 
 <p>接口的定义加强：<br>    在JDK1.8以前，接口是由抽象方法和全局常量组成，但是这种设计在JDK1.8之后发生了改变，即从JDK1.8开始可以在接口中定义普通方法(使用default声明)与静态方法(使用static声明)</p>
-<h2 id="抽象类与接口之间的关系"><a href="#抽象类与接口之间的关系" class="headerlink" title="抽象类与接口之间的关系"></a>抽象类与接口之间的关系</h2><p>序号|区别点|抽象类|接口<br>|:–:|:–:|:–:|:–:<br>1|定义|包含抽象方法的类|抽象方法和全局常量的集合<br>2|组成|构造方法、抽象方法、普通方法、常量、变量|常量、抽象方法<br>3|使用|子类继承抽象类(extends)|子类实现接口(implements)<br>4|关系|抽象类可以实现多个接口|接口不能继承抽象类、但是允许继承多个接口<br>5|常见设计模式|模板设计|工厂设计、代理设计<br>6|对象|都通过对象的多态性产生实例化对象|都通过对象的多态性产生实例化对象<br>7|局限|抽象类有单继承的局限|接口没有单继承的局限<br>8|实际|作为一个模板|是作为一个标准或者表示一种能力<br>9|选择|如果抽象类和接口都可以使用的话，优先使用接口，避免单继承的局限|如果抽象类和接口都可以使用的话，优先使用接口，避免单继承的局限<br>10|特殊|一个抽象类可以包含多个接口|一个接口可以包含多个抽象类</p>
+<h2 id="抽象类与接口之间的关系"><a href="#抽象类与接口之间的关系" class="headerlink" title="抽象类与接口之间的关系"></a>抽象类与接口之间的关系</h2><table>
+<thead>
+<tr>
+<th align="right">序号</th>
+<th align="center">区别点</th>
+<th align="center">抽象类</th>
+<th align="center">接口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">1</td>
+<td align="center">定义</td>
+<td align="center">包含抽象方法的类</td>
+<td align="center">抽象方法和全局常量的集合</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td align="center">组成</td>
+<td align="center">构造方法、抽象方法、普通方法、常量、变量</td>
+<td align="center">常量、抽象方法</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td align="center">使用</td>
+<td align="center">子类继承抽象类(extends)</td>
+<td align="center">子类实现接口(implements)</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td align="center">关系</td>
+<td align="center">抽象类可以实现多个接口</td>
+<td align="center">接口不能继承抽象类、但是允许继承多个接口</td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td align="center">常见设计模式</td>
+<td align="center">模板设计</td>
+<td align="center">工厂设计、代理设计</td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td align="center">对象</td>
+<td align="center">都通过对象的多态性产生实例化对象</td>
+<td align="center">都通过对象的多态性产生实例化对象</td>
+</tr>
+<tr>
+<td align="right">7</td>
+<td align="center">局限</td>
+<td align="center">抽象类有单继承的局限</td>
+<td align="center">接口没有单继承的局限</td>
+</tr>
+<tr>
+<td align="right">8</td>
+<td align="center">实际</td>
+<td align="center">作为一个模板</td>
+<td align="center">是作为一个标准或者表示一种能力</td>
+</tr>
+<tr>
+<td align="right">9</td>
+<td align="center">选择</td>
+<td align="center">如果抽象类和接口都可以使用的话，优先使用接口，避免单继承的局限</td>
+<td align="center">如果抽象类和接口都可以使用的话，优先使用接口，避免单继承的局限</td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td align="center">特殊</td>
+<td align="center">一个抽象类可以包含多个接口</td>
+<td align="center">一个接口可以包含多个抽象类</td>
+</tr>
+</tbody></table>
 <p>在类的设计中，一定铭记以下原则：</p>
 <div class="note default"><p>一个类不要去继承一个已经实现好的类，要么继承抽象类，要么实现接口，如果接口和抽象类都可以使用的话，那么优先使用接口，避免单继承的局限</p></div><script>
         document.querySelectorAll('.github-emoji')
