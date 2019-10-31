@@ -76,7 +76,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Java,数组," />
 
 
 
@@ -87,15 +87,15 @@
 
 
 
-<meta name="description" content="document.querySelectorAll(&amp;apos;.github-emoji&amp;apos;)           .forEach(el =&amp;gt; {             if (!el.dataset.src) { return; }             const img = document.createElement(&amp;apos;img&amp;apos;);             img.style">
-<meta name="keywords" content="Java">
+<meta name="description" content="Java中的二维数组在Java的二维数组中，静态引用的方式和C语言是不一样的，具体是怎样的，我们接着往下看">
+<meta name="keywords" content="Java,数组">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java中的二维数组">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;30&#x2F;Java%E4%B8%AD%E7%9A%84%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84&#x2F;index.html">
 <meta property="og:site_name" content="Lany&#39;s Blog">
-<meta property="og:description" content="document.querySelectorAll(&amp;apos;.github-emoji&amp;apos;)           .forEach(el =&amp;gt; {             if (!el.dataset.src) { return; }             const img = document.createElement(&amp;apos;img&amp;apos;);             img.style">
+<meta property="og:description" content="Java中的二维数组在Java的二维数组中，静态引用的方式和C语言是不一样的，具体是怎样的，我们接着往下看">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-30T13:42:32.753Z">
+<meta property="og:updated_time" content="2019-10-31T03:35:27.145Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -354,6 +354,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -386,7 +408,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  52 字
+                  444 字
                 </span>
               
 
@@ -423,7 +445,29 @@
       
 
       
-        <script>
+        <h2 id="Java中的二维数组"><a href="#Java中的二维数组" class="headerlink" title="Java中的二维数组"></a>Java中的二维数组</h2><p>在Java的二维数组中，静态引用的方式和C语言是不一样的，具体是怎样的，我们接着往下看</p>
+<a id="more"></a>
+<p>二维数组的初始化分为动态初始化和静态初始化</p>
+<ol>
+<li>动态初始化</li>
+</ol>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int [][]arry = new int[2][3];</span><br><span class="line">arry[0][1] = 1;</span><br><span class="line">arry[0][2] = 2;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br></pre></td></tr></tbody></table></figure>
+
+<p>动态初始化大家都用的很熟悉，这里就不在多加赘述了</p>
+<ol start="2">
+<li>静态初始化</li>
+</ol>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int [][]arry = {</span><br><span class="line">	{1,2},</span><br><span class="line">	{1,2,3},</span><br><span class="line">	{1,2,3,4}</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<p>Java中我们<strong>将二维数组看做是数组的数组，数组的空间分配是不连续的</strong>，这一点与C语言是大不相同的，正是因为这一特点，所以在Java中我们<strong>不要求二维数组每一维的大小相同</strong></p>
+<p>所以在以上的arry二维数组中，第一行只有1和2两个值，第三位和第四位是不存在的，如果我们去遍历这个二维数组不能按以下方式去遍历：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) {</span><br><span class="line">	for (int j = 0; j &lt; 4; j++) {</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>如果按照这个方式去遍历，则系统会报数组下标越界的错误</p>
+<p>正确的遍历方式:</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) {</span><br><span class="line">	for (int j = 0; j &lt; arry[i].length; j++) {</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>所以最后我们要谨记：在Java中我们不要求每一维的大小相同，所以在遍历的时候，我们要注意内循环的遍历次数是通过获取单行的长度<span class="label default">arry[i].length</span>来获得的</p>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -456,6 +500,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+          
+        </div>
+      
 
       
       
@@ -474,6 +526,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/31/%E6%B3%9B%E5%9E%8B/" rel="prev" title="泛型">
+                泛型 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -532,8 +588,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -552,7 +617,7 @@
               
                 <a href="/archives%7C%7C%20archive">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -574,7 +639,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -643,6 +708,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java中的二维数组"><span class="nav-number">1.</span> <span class="nav-text">Java中的二维数组</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

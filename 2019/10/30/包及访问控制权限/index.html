@@ -96,7 +96,8 @@
 <meta property="og:description" content="包包是在使用多个类或接口时，为了避免名称重复而采用的一种措施。如果要使用直接在程序中加入package即可 两个类如果是存放在不同的包中，则在使用类的时候就必须通过import进行导入 注意：  如果我们在一个程序中导入了两个包的同名类，在使用的时候必须明确的写出完整的”包.类名称”，如果我们不这样写那么就会如下：在这个例子中com.lany.a和com.lany.b都含有C这个类，但是我用的是”">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;30&#x2F;%E5%8C%85%E5%8F%8A%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%9D%83%E9%99%90&#x2F;1.png">
-<meta property="og:updated_time" content="2019-10-30T14:37:21.303Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;30&#x2F;%E5%8C%85%E5%8F%8A%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%9D%83%E9%99%90&#x2F;2.png">
+<meta property="og:updated_time" content="2019-10-31T03:09:11.487Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;30&#x2F;%E5%8C%85%E5%8F%8A%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%9D%83%E9%99%90&#x2F;1.png">
 
@@ -410,7 +411,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  384 字
+                  595 字
                 </span>
               
 
@@ -426,7 +427,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1 分钟
+                  2 分钟
                 </span>
               
             </div>
@@ -462,7 +463,27 @@
 
 </li>
 </ol>
-<h2 id="访问权限修饰符"><a href="#访问权限修饰符" class="headerlink" title="访问权限修饰符"></a>访问权限修饰符</h2><script>
+<p>Java新特性–静态导入</p>
+<p>在JDK1.5之后提供了静态导入功能，如果一个累的方法全部是使用static声明的静态方法，则在导入的时候就可以直接使用“import static”的方式导入</p>
+<p>使用了静态导入，一个类的所有静态方法就可以治直接通过<span class="label default">静态方法名()</span>进行调用，而不需要使用<span class="label default">类名.静态方法名()</span>进行调用</p>
+<h2 id="访问权限修饰符"><a href="#访问权限修饰符" class="headerlink" title="访问权限修饰符"></a>访问权限修饰符</h2><p>在Java中一共有4种访问权限修饰符：private、default、protected和public</p>
+<p><img src="2.png" alt=""></p>
+<p>访问权限从小到大：</p>
+<ol>
+<li><p>private访问权限</p>
+ <div class="note default"><p><strong>本类</strong>可以访问，其他类不行</p></div>
+</li>
+<li><p>default访问权限</p>
+ <div class="note default"><p><strong>本包中的类</strong>可以访问，其他包中的类无法访问</p></div>
+</li>
+<li><p>protected访问权限</p>
+ <div class="note default"><p><strong>本包及其他包子类</strong>可以访问</p></div>
+</li>
+<li><p>public访问权限</p>
+ <div class="note default"><p><strong>所有类</strong>都可以访问</p></div>
+</li>
+</ol>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -612,7 +633,7 @@
               
                 <a href="/archives%7C%7C%20archive">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -634,7 +655,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
