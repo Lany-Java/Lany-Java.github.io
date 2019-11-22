@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>泛型</title>
-    <url>/2019/10/31/%E6%B3%9B%E5%9E%8B/</url>
-    <content><![CDATA[<script>
+    <title>XML文件中的xmlns、xmlns:xis、xsi、schemaLocation、dtd</title>
+    <url>/2019/11/22/XML%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84xmlns%E3%80%81xsischemaLocation%E3%80%81dtd/</url>
+    <content><![CDATA[<p>最近在学习的时候经常遇到关于XML的问题，我对其中的xmlns、xmlns-xsi、xsi、schemaLocation等知识点却不是很了解</p>
+<p>这一篇文章我就用来记录一下我对于这方面的学习</p>
+<h2 id="xmlns"><a href="#xmlns" class="headerlink" title="xmlns"></a>xmlns</h2><h3 id="xmlns产生原因"><a href="#xmlns产生原因" class="headerlink" title="xmlns产生原因"></a>xmlns产生原因</h3><p>我们先来看以下的两个XML文档</p>
+<p>表格</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">	&lt;tr&gt;</span><br><span class="line">		&lt;td&gt;Apples&lt;/td&gt;</span><br><span class="line">		&lt;td&gt;Bananas&lt;/td&gt;</span><br><span class="line">	&lt;/tr&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>桌子</p>
+<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">	&lt;name&gt;AfricanCoffeeTable&lt;/name&gt;</span><br><span class="line">	&lt;width&gt;80&lt;/width&gt;</span><br><span class="line">	&lt;length&gt;120&lt;/length&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这两个XML文档都是使用的标签，那我们假设当这两个文档被一起使用，由于都包含有<table></table><p></p><h3 id="xmlns的使用"><a href="#xmlns的使用" class="headerlink" title="xmlns的使用"></a>xmlns的使用</h3><p>xmlns的全称是XML Namespaces，是XML命名空间，作用就是赋予命名空间一个唯一的名称</p><p>使用语法：xmlns:namespace-prefix=”namespaceURI”</p><p>namespace-prefix ：自定义命名空间前缀</p><p>namespaceURI ：这个前缀对应的XML Namespace的定义</p><p><strong>注意：用于标示命名空间的地址不会被解析器用于查找信息。其惟一的作用是赋予命名空间一个惟一的名称。不过，很多公司常常会作为指针来使用命名空间指向实际存在的网页，这个网页包含关于命名空间的信息</strong></p><p>xmlns如果不在后面加上命名空间前缀，那么此命名空间就是该XML文档的默认命名空间</p><h2 id="xis-schemaLocation"><a href="#xis-schemaLocation" class="headerlink" title="xis:schemaLocation"></a>xis:schemaLocation</h2><p>xsi:schemaLocation属性其实是Namespace为<a href="http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性</a></p><p>因为我们一开始声明了</p><figure class="highlight plain"></figure><table>
+
+
+
+
+
+
+
+
+</table>的缘故，我们无法知晓使用的是哪个table，就会发生命名冲突，XML解析器无法确定如何解决这样的冲突，于是为了解决以上带来的问题，我们就诞生了xmlns<table><tbody><tr><td class="code"><pre><span class="line">xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br></pre></td></tr></tbody></table>
+</p><p>而这个是遵从w3规范，是固定写法</p>
+<p>我们通过xsi:schemaLocation来将Namespace和其XSD(Xml Schema Definition)文档进行对象，它由多个URL引用对组成，两个URL之间以空白符(空格或者换行都行)分隔，第一个URL是Namespace的值，第二个URL是Schema文档的位置</p>
+<h2 id="dtd：XML中的文档声明类型：dtd"><a href="#dtd：XML中的文档声明类型：dtd" class="headerlink" title="dtd：XML中的文档声明类型：dtd"></a>dtd：XML中的文档声明类型：dtd</h2><p>dtd是一种对XML的约束，就是定义了之后，该XML文档必须按照我的约束条件来写</p>
+<p>而dtd又分了内部dtd和外部dtd</p>
+<p>内部dtd使用使用系统标识符(System)</p>
+<p>外部dtd使用公共标识符(Public)</p>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -22,6 +47,12 @@
             document.body.appendChild(img);
           });
       </script>]]></content>
+      <categories>
+        <category>XML</category>
+      </categories>
+      <tags>
+        <tag>XML</tag>
+      </tags>
   </entry>
   <entry>
     <title>Java中的二维数组</title>
@@ -47,7 +78,7 @@
 <p>正确的遍历方式:</p>
 <figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) {</span><br><span class="line">	for (int j = 0; j &lt; arry[i].length; j++) {</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
-<p>所以最后我们要谨记：在Java中我们不要求每一维的大小相同，所以在遍历的时候，我们要注意内循环的遍历次数是通过获取单行的长度<span class="label default">arry[i].length</span>来获得的</p>
+<p>所以最后我们要谨记：<strong>在Java中我们不要求每一维的大小相同，所以在遍历的时候，我们要注意内循环的遍历次数是通过获取单行的长度<span class="label default">arry[i].length</span>来获得的</strong></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -180,7 +211,7 @@
 <p>接口的成员：</p>
 <div class="note default"><ol>
 <li>全局常量</li>
-<li>抽象方法：修饰符只能是public</li>
+<li>抽象方法：修饰符只能是public,而且默认也是public</li>
 </ol></div>
 
 <p>接口、抽象类之间的继承关系</p>
@@ -668,76 +699,6 @@
       <tags>
         <tag>基础类型</tag>
         <tag>包装类型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>用GitHub+Hexo从零搭建一个博客</title>
-    <url>/2019/10/23/%E7%94%A8GitHub-Hexo%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我们学习总要有一个地方来记录自己走过的路，爬过的坑，我以前使用过印象笔记，但是因为有一次电脑意外的“出事”，以前的记录全部不见了，后来我又在GitHub上写md文档来记录自己的学习，但作为一个不甘寂寞的程序猿，我当然也想要搭建一个属于自己的个人网站，于是本着这样的思想，我建立了这个个人博客来记录自己的学习，也方便我可以与其他的人交流彼此的想法和技术(只有交流才能更好的进步),这就有了这个博客的诞生。</p>
-<a id="more"></a>
-<p>本篇博文包含以下内容</p>
-<ol>
-<li><p>GitHub Pages与Hexo</p>
-<ul>
-<li><p>什么是GitHub Pages？</p>
-</li>
-<li><p>什么是Hexo？</p>
-</li>
-</ul>
-</li>
-<li><p>搭建步骤</p>
-<ul>
-<li><p>GitHub创建个人仓库</p>
-</li>
-<li><p>获取个人网站域名</p>
-</li>
-<li><p>配置环境-安装Git</p>
-</li>
-<li><p>配置环境-安装Node.Js</p>
-</li>
-<li><p>配置环境-安装Hexo</p>
-</li>
-<li><p>推送网站</p>
-</li>
-<li><p>绑定域名</p>
-</li>
-</ul>
-</li>
-</ol>
-<h1 id="GitHub-Pages与Hexo"><a href="#GitHub-Pages与Hexo" class="headerlink" title="GitHub Pages与Hexo"></a>GitHub Pages与Hexo</h1><h2 id="什么是GitPages？"><a href="#什么是GitPages？" class="headerlink" title="什么是GitPages？"></a>什么是GitPages？</h2><p>GitHub Page是一种静态站点托管服务，该服务直接从GitHub上的存储库获取HTML，CSS和JavaScript文件，可以选择在构建过程中运行这些文件并发布网站。</p>
-<p>您可以将站点托管在GitHub的<span class="label default">github.io</span>域或您自己的自定义域上，可以使用GitHub Pages直接从GitHub存储库托管有关您自己，您的组织或项目的网站。<span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/1f608.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/1f608.png?v8">😈</span></p>
-<h2 id="什么是Hexo？"><a href="#什么是Hexo？" class="headerlink" title="什么是Hexo？"></a>什么是Hexo？</h2><p>Hexo是一款基于Node.js的静态博客框架，依赖少易于安装使用，可以方便的生成静态网页托管在GitHub和Heroku上，是搭建博客的首选框架。这里我们选用的是GitHub，你没看错，全球最大的同性恋交友网站（逃……）。Hexo同时也是GitHub上的开源项目，如果想要更加全面的了解Hexo，可以到其官网 Hexo 了解更多的细节，因为Hexo的创建者是台湾人，对中文的支持很友好，可以选择中文进行查看。</p>
-<h1 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h1><h2 id="GitHub创建个人仓库"><a href="#GitHub创建个人仓库" class="headerlink" title="GitHub创建个人仓库"></a>GitHub创建个人仓库</h2><p>默认大家都有自己的GitHub账号，如果没有，请移步<a herf="www.google.com">谷歌</a>,查询GitHub账号的创建。</p>
-<p>在创建好账号之后，点击GitHub中的New repository创建新仓库，仓库名应该为:<span class="label default">用户名.github.io</span></p>
-<h2 id="获取个人网站域名"><a href="#获取个人网站域名" class="headerlink" title="获取个人网站域名"></a>获取个人网站域名</h2><p>域名是我们输入的网站的入口，有许多我们常见的域名后缀，比如com,cn,org,net等，当然也有许多小众的域名比如xyz,me,io等后缀，我们在申请域名的时候，可以根据自己的喜好，选择不同的后缀。但是很多小众的域名后缀在大陆是没有办法备案的，网站也就没有办法上线。所以可以尽量使用普遍一些的域名后缀</p>
-<p>申请域名的地方有很多，比如阿里云和腾讯云，这里我使用的是阿里云：<a herf="www.aliyun.com">阿里云</a>，进去之后找到<a herf="https://wanwang.aliyun.com/domain/">域名注册</a>，购买域名这也是我们使用GitHub+Hexo搭建博客唯一需要花钱的地方</p>
-<h2 id="配置环境-安装Git"><a href="#配置环境-安装Git" class="headerlink" title="配置环境-安装Git"></a>配置环境-安装Git</h2><p>Git是什么？</p>
-<p>Git是开源的分布式版本控制系统，用于敏捷高效地处理项目。我们网站在本地搭建好了，需要使用Git同步到GitHub上。</p>
-<h2 id="配置环境-安装Node-Js"><a href="#配置环境-安装Node-Js" class="headerlink" title="配置环境-安装Node.Js"></a>配置环境-安装Node.Js</h2><h2 id="配置环境-安装Hexo"><a href="#配置环境-安装Hexo" class="headerlink" title="配置环境-安装Hexo"></a>配置环境-安装Hexo</h2><h2 id="推送网站"><a href="#推送网站" class="headerlink" title="推送网站"></a>推送网站</h2><h2 id="绑定域名"><a href="#绑定域名" class="headerlink" title="绑定域名"></a>绑定域名</h2><script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Blog</tag>
-        <tag>Hexo</tag>
       </tags>
   </entry>
 </search>
