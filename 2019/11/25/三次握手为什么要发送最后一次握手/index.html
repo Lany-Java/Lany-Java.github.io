@@ -91,14 +91,14 @@
 <meta name="keywords" content="计算机网络">
 <meta property="og:type" content="article">
 <meta property="og:title" content="三次握手为什么要发送最后一次确认?">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E7%A1%AE%E8%AE%A4&#x2F;index.html">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B&#x2F;index.html">
 <meta property="og:site_name" content="Lany&#39;s Blog">
 <meta property="og:description" content="我们都知道TCP建立连接（三次握手）时，需要进行三次报文交换，当客户端发起连接请求，服务器进行确认回应时，为什么这时客户端还要发起一次确认呢？ 我们现在就来看看TCP的执行流程">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E7%A1%AE%E8%AE%A4&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
 <meta property="og:updated_time" content="2019-11-25T13:53:44.647Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E7%A1%AE%E8%AE%A4&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
 
 
 
@@ -128,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/11/25/三次握手为什么要发送最后一次确认/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/11/25/三次握手为什么要发送最后一次握手/"/>
 
 
 
@@ -316,7 +316,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/25/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E7%A1%AE%E8%AE%A4/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/25/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lany">
@@ -385,7 +385,7 @@
 
           
           
-             <span id="/2019/11/25/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E7%A1%AE%E8%AE%A4/" class="leancloud_visitors" data-flag-title="三次握手为什么要发送最后一次确认?">
+             <span id="/2019/11/25/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B/" class="leancloud_visitors" data-flag-title="三次握手为什么要发送最后一次确认?">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -650,7 +650,7 @@
                   </span>
                 
                   <span class="links-of-author-item">
-                    <a href="https://caozongpeng.github.io" target="_blank" title="Resume">
+                    <a href="https://Lany-Java.github.io" target="_blank" title="Resume">
                       
                         <i class="fa fa-fw fa-globe"></i>Resume</a>
                   </span>
@@ -662,24 +662,6 @@
           
 
           
-          
-            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
-              <div class="links-of-blogroll-title">
-                <i class="fa  fa-fw fa-link"></i>
-                友链
-              </div>
-              <ul class="links-of-blogroll-list">
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="https://godbmw.com/" title="GodBMW" target="_blank">GodBMW</a>
-                  </li>
-                
-                  <li class="links-of-blogroll-item">
-                    <a href="http://13blog.site/" title="13Blog" target="_blank">13Blog</a>
-                  </li>
-                
-              </ul>
-            </div>
           
 
           
