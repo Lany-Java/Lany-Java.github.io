@@ -408,7 +408,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  444 字
+                  408 字
                 </span>
               
 
@@ -451,41 +451,23 @@
 <ol>
 <li>动态初始化</li>
 </ol>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int [][]arry = new int[2][3];</span><br><span class="line">arry[0][1] = 1;</span><br><span class="line">arry[0][2] = 2;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int [][]arry = new int[2][3];</span><br><span class="line">arry[0][1] = 1;</span><br><span class="line">arry[0][2] = 2;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br></pre></td></tr></table></figure>
 
 <p>动态初始化大家都用的很熟悉，这里就不在多加赘述了</p>
 <ol start="2">
 <li>静态初始化</li>
 </ol>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int [][]arry = {</span><br><span class="line">	{1,2},</span><br><span class="line">	{1,2,3},</span><br><span class="line">	{1,2,3,4}</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int [][]arry = &#123;</span><br><span class="line">	&#123;1,2&#125;,</span><br><span class="line">	&#123;1,2,3&#125;,</span><br><span class="line">	&#123;1,2,3,4&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>Java中我们<strong>将二维数组看做是数组的数组，数组的空间分配是不连续的</strong>，这一点与C语言是大不相同的，正是因为这一特点，所以在Java中我们<strong>不要求二维数组每一维的大小相同</strong></p>
 <p>所以在以上的arry二维数组中，第一行只有1和2两个值，第三位和第四位是不存在的，如果我们去遍历这个二维数组不能按以下方式去遍历：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) {</span><br><span class="line">	for (int j = 0; j &lt; 4; j++) {</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">	for (int j = 0; j &lt; 4; j++) &#123;</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果按照这个方式去遍历，则系统会报数组下标越界的错误</p>
 <p>正确的遍历方式:</p>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) {</span><br><span class="line">	for (int j = 0; j &lt; arry[i].length; j++) {</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">	for (int j = 0; j &lt; arry[i].length; j++) &#123;</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>所以最后我们要谨记：<strong>在Java中我们不要求每一维的大小相同，所以在遍历的时候，我们要注意内循环的遍历次数是通过获取单行的长度<span class="label default">arry[i].length</span>来获得的</strong></p>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>
+
       
     </div>
     

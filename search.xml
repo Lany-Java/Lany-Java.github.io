@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>三次握手为什么要发送最后一次确认?</title>
-    <url>/2019/11/25/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B/</url>
-    <content><![CDATA[<p>我们都知道TCP建立连接（三次握手）时，需要进行三次报文交换，当客户端发起连接请求，服务器进行确认回应时，为什么这时客户端还要发起一次确认呢？</p>
-<p>我们现在就来看看TCP的执行流程</p>
+    <title>为什么不是两次或者4次握手而是三次握手呢？</title>
+    <url>/2019/11/26/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%98%AF%E4%B8%A4%E6%AC%A1%E6%88%96%E8%80%854%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%80%8C%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/</url>
+    <content><![CDATA[<h1 id="为什么不是两次握手？"><a href="#为什么不是两次握手？" class="headerlink" title="为什么不是两次握手？"></a>为什么不是两次握手？</h1></br>
+我们都知道TCP建立连接（三次握手）时，需要进行三次报文交换，当客户端Client发起连接请求，服务器Server进行确认回应时，为什么这时Client还要发起一次握手呢？
+
+<p>我们现在就来看看TCP建立连接的执行流程</p>
 <a id="more"></a>
 <p><img src="%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt=""></p>
-<p>我们首先来看Client端发起了第一次握手，请求建立连接</p>
-<p>Server端在接收到连接请求后，回复确认连接报文</p>
-<p>这时候我们来想一想在前两次握手中可能有哪些情况？</p>
+<p>我们首先来看Client发起了第一次握手，请求建立连接,Server在接收到连接请求后，回复确认连接报文</p>
+<p>这时候我们来想一想在前两次握手中可能有哪些异常情况？</p>
 <ol>
-<li>正常到达，这种情况不用管</li>
-<li>Client发出请求，但是连接请求报文丢失，Client未收到来自Server的确认，这时Client重传一次连接请求，后来收到确认，建立了连接，数据传输完毕之后，关闭连接，这种情况也正常，不用管</li>
-<li>Client发出请求，连接请求报文不是丢失，而是因为网络堵塞长时间滞留了，以致延误到连接释放之后某个时间点才到达Server，本来这事一个早已经失效的报文段，但是Server在接收到此失效的报文段的时候，就会误以为Client发出了新的连接请求，于是就向Client发出确认报文段，同意建立连接，在这种情况下，Client并没有发送建立连接的请求，因此不会理会Server发送过来的确认报文段，但Server却以为连接已经建立了，就一直等待Client发来数据，Server的许多资源就这样被浪费了</li>
+<li>Client发出建立连接请求报文（第一次握手），但是连接请求报文丢失，Client未收到来自Server的确认，这时Client重传连接请求，直至后来收到来自Server的确认，建立连接，数据传输完毕之后，关闭连接。</li>
+<li>Client发出建立连接请求报文（第一次握手），连接请求报文顺利到达，但是Server的确认报文（第二次握手）在传输过程中丢失，Client未收到来自Server的确认报文，这时Client超时重传，直至收到来自Server的确认，建立连接，数据传输完毕之后，关闭连接。</li>
+<li>Client发出建立连接请求报文（第一次握手），连接请求报文不是丢失，而是因为网络堵塞长时间滞留了，以致延误到连接释放之后某个时间点才到达Server，本来这事一个早已经失效的报文段，但是Server在接收到此失效的报文段的时候，就会误以为Client发出了新的连接请求，于是就向Client发出确认报文段，同意建立连接，在这种情况下，Client并没有发送建立连接的请求，因此不会理会Server发送过来的确认报文段，但Server却以为连接已经建立了，就一直等待Client发来数据，Server的许多资源就这样被浪费了</li>
 </ol>
-<p>可以看出以上三种情况中，第三种情况如果不采取一定的机制去预防，那么就会造成一个无用的新连接的建立，以至于浪费许多的资源，所以为了解决这个问题，我们让Client端在接收到Server端的确认报文段之后，在向Server端发送一个报文段，进行最后一次握手。这时Server在发送自己的确认报文段之后，并没有从Client收到最后一次握手的报文段，那么Server端就知道这是异常情况，并不会建立连接，这种异常情况，就因为最后一次握手得以解决</p>
-<p><strong>看完以上我们知道了，客户端发起的最后一次握手是为了防止Client已失效的连接请求报文段突然又传送到了Server，导致Server误以为和Client的连接已经建立，因而产生错误，造成资源的浪费</strong></p>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
+<p>可以看出以上三种情况中，第三种情况如果不采取一定的机制去预防，那么就会造成一个无用的新连接的建立，以至于浪费许多的资源，所以为了解决这个问题，我们让Client在接收到Server的确认报文段之后，在向Server发送一个报文段，进行最后一次握手。这时Server在发送自己的确认报文段之后，并没有从Client收到最后一次握手的报文段，那么Server就知道这是异常情况，并不会建立连接，这种异常情况，就因为最后一次握手得以解决。<strong>所以第三次握手防止了已失效的连接请求报文突然传送到Server，从而产生错误</strong></p>
+<p>看完以上我们应该知道了，<strong>第三次握手是因为信道的不可靠性，而我们又要建立可靠连接发送可靠的数据，在端方建立的差错控制机制，以此来保证数据的可靠传输</strong>，因此第三次握手必不可少</p>
+<h1 id="为什么不是四次握手？"><a href="#为什么不是四次握手？" class="headerlink" title="为什么不是四次握手？"></a>为什么不是四次握手？</h1></br>
+以上我们知道了第三次传输必不可少，但是那我们为什么不使用四次握手呢？
+
+<p>现在让我们来看看如果是四次握手，那么它的执行流程是什么：</p>
+<ol>
+<li><strong>第一次握手：</strong>Client向Server发出连接请求报文，设置<strong>SYN=1，seq=x</strong></li>
+<li><strong>第二次握手：</strong>Server收到Client的连接请求，回发确认报文，设置<strong>SYN=1，ACK=1，ack=x+1</strong></li>
+<li><strong>第三次握手：</strong>Server向Client发送建立连接请求，设置<strong>SYN=1，seq=y</strong></li>
+<li><strong>第四次握手：</strong>Client收到Server的请求，回发确认报文，设置<strong>SYN=1，ACK=1，ack=y+1</strong></li>
+</ol>
+<p>从以上我们可以很明显的看出，第二次握手和第三次握手可以合并在一起，合并在一起之后，不就是我们三次握手的第二次握手吗？</p>
+<p><strong>二者可以进行合并，只使用三次握手，以提高连接效率，所以四次握手本质上也还是三次握手，并且效率还不如三次握手，我们自然不会采用四次握手</strong></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li><p>为什么不是两次握手？</p>
+<p> 因为信道是不可靠的，而TCP又是提供可靠的数据传输，既然信道无法做到数据的可靠传输，那么我们在端系统这一方来完成数据的可靠传输，第三次握手就是一种保证可靠传输的差错控制机制，是必不可少的。</p>
+</li>
+<li><p>为什么不是四次握手？</p>
+<p> 四次握手的中间两次是可以合并的，合并之后就是三次握手，还提升了连接效率</p>
+</li>
+<li><p>总的来说，<strong>三次握手就是一个理论上既保证了传输的可靠性，又保证了建立连接效率的最小握手次数。</strong></p>
+</li>
+</ol>
+]]></content>
       <categories>
         <category>计算机网络</category>
       </categories>
@@ -51,47 +56,29 @@
 <a id="more"></a>
 <h2 id="xmlns"><a href="#xmlns" class="headerlink" title="xmlns"></a>xmlns</h2><h3 id="xmlns产生原因"><a href="#xmlns产生原因" class="headerlink" title="xmlns产生原因"></a>xmlns产生原因</h3><p>我们先来看以下的两个XML文档</p>
 <p>表格</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">	&lt;tr&gt;</span><br><span class="line">		&lt;td&gt;Apples&lt;/td&gt;</span><br><span class="line">		&lt;td&gt;Bananas&lt;/td&gt;</span><br><span class="line">	&lt;/tr&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">	&lt;tr&gt;</span><br><span class="line">		&lt;td&gt;Apples&lt;/td&gt;</span><br><span class="line">		&lt;td&gt;Bananas&lt;/td&gt;</span><br><span class="line">	&lt;/tr&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></table></figure>
 
 <p>桌子</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">	&lt;name&gt;AfricanCoffeeTable&lt;/name&gt;</span><br><span class="line">	&lt;width&gt;80&lt;/width&gt;</span><br><span class="line">	&lt;length&gt;120&lt;/length&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">	&lt;name&gt;AfricanCoffeeTable&lt;/name&gt;</span><br><span class="line">	&lt;width&gt;80&lt;/width&gt;</span><br><span class="line">	&lt;length&gt;120&lt;/length&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></table></figure>
 
-<p>这两个XML文档都是使用的标签，那我们假设当这两个文档被一起使用，由于都包含有table标签的缘故，我们无法知晓使用的是哪个table，就会发生命名冲突，XML解析器无法确定如何解决这样的冲突，于是为了解决以上带来的问题，我们就诞生了xmlns<p></p><h3 id="xmlns的使用"><a href="#xmlns的使用" class="headerlink" title="xmlns的使用"></a>xmlns的使用</h3><p>xmlns的全称是XML Namespaces，是XML命名空间，作用就是赋予命名空间一个唯一的名称</p><p>使用语法：xmlns:namespace-prefix=”namespaceURI”</p><p>namespace-prefix ：自定义命名空间前缀</p><p>namespaceURI ：这个前缀对应的XML Namespace的定义</p><p><strong>注意：用于标示命名空间的地址不会被解析器用于查找信息。其惟一的作用是赋予命名空间一个惟一的名称。不过，很多公司常常会作为指针来使用命名空间指向实际存在的网页，这个网页包含关于命名空间的信息</strong></p><p>xmlns如果不在后面加上命名空间前缀，那么此命名空间就是该XML文档的默认命名空间</p><h2 id="xis-schemaLocation"><a href="#xis-schemaLocation" class="headerlink" title="xis:schemaLocation"></a>xis:schemaLocation</h2><p>xsi:schemaLocation属性其实是Namespace为<a href="http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性</a></p><p>因为我们一开始声明了</p><div class="note default"><p>xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance&quot;" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance"</a></p></div><p>而这个是遵从w3规范，是固定写法</p><p>我们通过xsi:schemaLocation来将Namespace和其XSD(Xml Schema Definition)文档进行对象，它由多个URL引用对组成，两个URL之间以空白符(空格或者换行都行)分隔，第一个URL是Namespace的值，第二个URL是Schema文档的位置</p><h2 id="dtd：XML中的文档声明类型：dtd"><a href="#dtd：XML中的文档声明类型：dtd" class="headerlink" title="dtd：XML中的文档声明类型：dtd"></a>dtd：XML中的文档声明类型：dtd</h2><p>dtd是一种对XML的约束，就是定义了之后，该XML文档必须按照我的约束条件来写</p><p>而dtd又分了内部dtd和外部dtd</p><p>内部dtd使用使用系统标识符(System)</p><p>外部dtd使用公共标识符(Public)</p><table>
+<p>这两个XML文档都是使用的<table>标签，那我们假设当这两个文档被一起使用，由于都包含有table标签的缘故，我们无法知晓使用的是哪个table，就会发生命名冲突，XML解析器无法确定如何解决这样的冲突，于是为了解决以上带来的问题，我们就诞生了xmlns</p>
+<h3 id="xmlns的使用"><a href="#xmlns的使用" class="headerlink" title="xmlns的使用"></a>xmlns的使用</h3><p>xmlns的全称是XML Namespaces，是XML命名空间，作用就是赋予命名空间一个唯一的名称</p>
+<p>使用语法：xmlns:namespace-prefix=”namespaceURI”</p>
+<p>namespace-prefix ：自定义命名空间前缀</p>
+<p>namespaceURI ：这个前缀对应的XML Namespace的定义</p>
+<p><strong>注意：用于标示命名空间的地址不会被解析器用于查找信息。其惟一的作用是赋予命名空间一个惟一的名称。不过，很多公司常常会作为指针来使用命名空间指向实际存在的网页，这个网页包含关于命名空间的信息</strong></p>
+<p>xmlns如果不在后面加上命名空间前缀，那么此命名空间就是该XML文档的默认命名空间</p>
+<h2 id="xis-schemaLocation"><a href="#xis-schemaLocation" class="headerlink" title="xis:schemaLocation"></a>xis:schemaLocation</h2><p>xsi:schemaLocation属性其实是Namespace为<a href="http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性</a></p>
+<p>因为我们一开始声明了</p>
+<div class="note default"><p>xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance&quot;" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance&quot;</a></p></div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</table></p><script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
+<p>而这个是遵从w3规范，是固定写法</p>
+<p>我们通过xsi:schemaLocation来将Namespace和其XSD(Xml Schema Definition)文档进行对象，它由多个URL引用对组成，两个URL之间以空白符(空格或者换行都行)分隔，第一个URL是Namespace的值，第二个URL是Schema文档的位置</p>
+<h2 id="dtd：XML中的文档声明类型：dtd"><a href="#dtd：XML中的文档声明类型：dtd" class="headerlink" title="dtd：XML中的文档声明类型：dtd"></a>dtd：XML中的文档声明类型：dtd</h2><p>dtd是一种对XML的约束，就是定义了之后，该XML文档必须按照我的约束条件来写</p>
+<p>而dtd又分了内部dtd和外部dtd</p>
+<p>内部dtd使用使用系统标识符(System)</p>
+<p>外部dtd使用公共标识符(Public)</p>
+]]></content>
       <categories>
         <category>XML</category>
       </categories>
@@ -108,41 +95,23 @@
 <ol>
 <li>动态初始化</li>
 </ol>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">int [][]arry = new int[2][3];</span><br><span class="line">arry[0][1] = 1;</span><br><span class="line">arry[0][2] = 2;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int [][]arry = new int[2][3];</span><br><span class="line">arry[0][1] = 1;</span><br><span class="line">arry[0][2] = 2;</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br></pre></td></tr></table></figure>
 
 <p>动态初始化大家都用的很熟悉，这里就不在多加赘述了</p>
 <ol start="2">
 <li>静态初始化</li>
 </ol>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">int [][]arry = {</span><br><span class="line">	{1,2},</span><br><span class="line">	{1,2,3},</span><br><span class="line">	{1,2,3,4}</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int [][]arry = &#123;</span><br><span class="line">	&#123;1,2&#125;,</span><br><span class="line">	&#123;1,2,3&#125;,</span><br><span class="line">	&#123;1,2,3,4&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>Java中我们<strong>将二维数组看做是数组的数组，数组的空间分配是不连续的</strong>，这一点与C语言是大不相同的，正是因为这一特点，所以在Java中我们<strong>不要求二维数组每一维的大小相同</strong></p>
 <p>所以在以上的arry二维数组中，第一行只有1和2两个值，第三位和第四位是不存在的，如果我们去遍历这个二维数组不能按以下方式去遍历：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) {</span><br><span class="line">	for (int j = 0; j &lt; 4; j++) {</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">	for (int j = 0; j &lt; 4; j++) &#123;</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果按照这个方式去遍历，则系统会报数组下标越界的错误</p>
 <p>正确的遍历方式:</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) {</span><br><span class="line">	for (int j = 0; j &lt; arry[i].length; j++) {</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">for (int i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">	for (int j = 0; j &lt; arry[i].length; j++) &#123;</span><br><span class="line">		System.out.println(arry[i][j]);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>所以最后我们要谨记：<strong>在Java中我们不要求每一维的大小相同，所以在遍历的时候，我们要注意内循环的遍历次数是通过获取单行的长度<span class="label default">arry[i].length</span>来获得的</strong></p>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
+]]></content>
       <categories>
         <category>Java基础</category>
       </categories>
@@ -189,25 +158,7 @@
  <div class="note default"><p><strong>所有类</strong>都可以访问</p></div>
 </li>
 </ol>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
+]]></content>
       <categories>
         <category>Java基础</category>
       </categories>
@@ -335,25 +286,7 @@
 </tr>
 </tbody></table>
 <p>在类的设计中，一定铭记以下原则：</p>
-<div class="note default"><p>一个类不要去继承一个已经实现好的类，要么继承抽象类，要么实现接口，如果接口和抽象类都可以使用的话，那么优先使用接口，避免单继承的局限</p></div><script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
+<div class="note default"><p>一个类不要去继承一个已经实现好的类，要么继承抽象类，要么实现接口，如果接口和抽象类都可以使用的话，那么优先使用接口，避免单继承的局限</p></div>]]></content>
       <categories>
         <category>Java基础</category>
       </categories>
@@ -392,25 +325,7 @@
 </ul>
 </li>
 </ol>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
+]]></content>
       <categories>
         <category>IDEA</category>
       </categories>
@@ -433,15 +348,15 @@
 </ol></div>
 
 <h2 id="1-内部类方法可以访问该类定义所在作用域中的数据"><a href="#1-内部类方法可以访问该类定义所在作用域中的数据" class="headerlink" title="1.内部类方法可以访问该类定义所在作用域中的数据"></a>1.内部类方法可以访问该类定义所在作用域中的数据</h2><p>我们下面来看一个实例：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class TalkingClock {</span><br><span class="line">    private int interval;   //时间间隔</span><br><span class="line">    private boolean beep;	//标志位</span><br><span class="line"></span><br><span class="line">    public TalkingClock(int interval,boolean beep){</span><br><span class="line">		...</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void start(){</span><br><span class="line">		...</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public class TimePrinter implements ActionListener{</span><br><span class="line">        @Override</span><br><span class="line">        public void actionPerformed(ActionEvent e) {</span><br><span class="line">            System.out.println("At the tone, the time is" + new Date());</span><br><span class="line">            if(beep){</span><br><span class="line">                Toolkit.getDefaultToolkit().beep();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class TalkingClock &#123;</span><br><span class="line">    private int interval;   //时间间隔</span><br><span class="line">    private boolean beep;	//标志位</span><br><span class="line"></span><br><span class="line">    public TalkingClock(int interval,boolean beep)&#123;</span><br><span class="line">		...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void start()&#123;</span><br><span class="line">		...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public class TimePrinter implements ActionListener&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void actionPerformed(ActionEvent e) &#123;</span><br><span class="line">            System.out.println(&quot;At the tone, the time is&quot; + new Date());</span><br><span class="line">            if(beep)&#123;</span><br><span class="line">                Toolkit.getDefaultToolkit().beep();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们观察TimePrinter中的方法使用了beep变量，但是在TimePrinter类中没有实例域或者名为beep的变量，相反的是beep是引用的创建TimePrinter的TalkingClock对象的域，这是一种很创新的想法。</p>
 <p>按传统意义来讲，一个方法可以引用调用这个方法的对象数据域。按照这样的思想，内部类既可以访问自身的数据域，也可以访问创建它的外部类对象的数据域。为了实现这一点，<strong>内部类的对象总有一个隐式引用，它指向了创建它的外部类对象</strong><br><img src="%E5%AF%B9%E5%A4%96%E9%83%A8%E7%B1%BB%E7%9A%84%E9%9A%90%E5%BC%8F%E5%BC%95%E7%94%A8.jpg" alt=""></p>
 <p>这个引用在内部类的定义中是不可见的，外部类的引用是在构造器中设置。编译器修改了所有内部类的构造器，添加一个外部类引用的参数 ，因为TimePrinter类没有定义构造器，所以编译器为这个类生成了一个默认的构造器:</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public TimePrinter(TalkingClock clock){</span><br><span class="line">	outer = clock;             //这里outer不是关键字，只是用来说明内部类中的机制</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public TimePrinter(TalkingClock clock)&#123;</span><br><span class="line">	outer = clock;             //这里outer不是关键字，只是用来说明内部类中的机制</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>当外部类对象创建了TimePrinter对象后，编译器就会将this引用传递给当前的TimePrinter构造器,<strong>通过这个隐式引用，我们可以访问外部类对象的数据域</strong>:</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">ActionListener listener = new TimePrinter(this);</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ActionListener listener = new TimePrinter(this);</span><br></pre></td></tr></table></figure>
 
 <div class="note default"><p>另外注意内部类只是一种编译器现象，与虚拟机无关。编译器会将内部类编译成 外部类名$内部类名 的常规文件，虚拟机对此一无所知。</p></div>
 
@@ -451,27 +366,27 @@
 <div class="note default"><p>我们隐藏接口的实现，就解决了继承以及实现接口后可能造成出现同名方法的问题</p></div>
 
 <p>现在我们来看一个例子去更好的理解内部类对其他类隐藏起来了的好处：<br>一个接口Demo，中间有一个test()方法</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public interface Demo {</span><br><span class="line">    void test();      </span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public interface Demo &#123;</span><br><span class="line">    void test();      </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>一个类MyDemo,中间也有一个test()方法</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class MyDemo {</span><br><span class="line">  ​</span><br><span class="line">    public void test() {</span><br><span class="line">        System.out.println("父类的test方法");</span><br><span class="line">    }</span><br><span class="line">      </span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class MyDemo &#123;</span><br><span class="line">  ​</span><br><span class="line">    public void test() &#123;</span><br><span class="line">        System.out.println(&quot;父类的test方法&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">      </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>一个测试类</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class DemoTest extends MyDemo implements Demo {</span><br><span class="line">    public void test() {</span><br><span class="line">		</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class DemoTest extends MyDemo implements Demo &#123;</span><br><span class="line">    public void test() &#123;</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们看测试类DemoTest继承了MyDemo，实现了Demo接口，而二者又都同时含有test方法，那么测试类DemoTest中的test()方法是覆写的谁的呢？这个时候我们就没法区分出这个方法是接口的还是继承的了，所以我们要使用内部类来解决这个问题：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class DemoTest extends MyDemo {</span><br><span class="line">  ​</span><br><span class="line">  ​</span><br><span class="line">    private class inner implements Demo {</span><br><span class="line">	    public void test() {</span><br><span class="line">		    System.out.println("接口的test方法");</span><br><span class="line">	    }</span><br><span class="line">    }</span><br><span class="line">  </span><br><span class="line">    public Demo getIn() {</span><br><span class="line">	    return new inner();</span><br><span class="line">    }</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">	    //调用接口而来的test()方法</span><br><span class="line">	    DemoTest dt = new DemoTest();</span><br><span class="line">	    Demo d = dt.getIn();</span><br><span class="line">	    d.test();</span><br><span class="line">	   </span><br><span class="line">	    //调用继承而来的test()方法</span><br><span class="line">	    dt.test();</span><br><span class="line">    }</span><br><span class="line">  }</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class DemoTest extends MyDemo &#123;</span><br><span class="line">  ​</span><br><span class="line">  ​</span><br><span class="line">    private class inner implements Demo &#123;</span><br><span class="line">	    public void test() &#123;</span><br><span class="line">		    System.out.println(&quot;接口的test方法&quot;);</span><br><span class="line">	    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    public Demo getIn() &#123;</span><br><span class="line">	    return new inner();</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">	    //调用接口而来的test()方法</span><br><span class="line">	    DemoTest dt = new DemoTest();</span><br><span class="line">	    Demo d = dt.getIn();</span><br><span class="line">	    d.test();</span><br><span class="line">	   </span><br><span class="line">	    //调用继承而来的test()方法</span><br><span class="line">	    dt.test();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 <p>运行结果：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">接口的test方法</span><br><span class="line">父类的test方法</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">接口的test方法</span><br><span class="line">父类的test方法</span><br></pre></td></tr></table></figure>
 
 <p>我们可以看到这时候因为同名造成的矛盾已经被解决了，在上面这段代码中，我们只知道DemoTest类中的getIn方法能返回一个Demo接口的实例，但是我们并不知道这个实例是怎么实现的，而且由于inner类是private的，所以如果我们不看源代码的话，我们根本就看不到这个具体类的名字，所以说他可以很好的实现隐藏</p>
 <h2 id="3-内部类可以实现-java-单继承的缺陷"><a href="#3-内部类可以实现-java-单继承的缺陷" class="headerlink" title="3.内部类可以实现 java 单继承的缺陷"></a>3.内部类可以实现 java 单继承的缺陷</h2><p>我们都知道Java当中是只有单继承，没有多继承的，我们虽然可以使用实现多接口来解决没有多继承的问题，但是接口实现多了也会造成一些不方便的地方，比兔实现一个接口就必须实现它里面的所有方法，而我们使用内部类可以使我们的类继承多个具体的类或者抽象类，<strong>内部类的引入让我使得多继承的实现成为了可能</strong>，它使得我们从另外一个角度去实现了多继承</p>
 <p>我们来看一下这个例子：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">//类一</span><br><span class="line">public class ClassA {</span><br><span class="line">   public String name(){</span><br><span class="line">       return "liutao";</span><br><span class="line">   }</span><br><span class="line">   public String doSomeThing(){</span><br><span class="line">    // doSomeThing</span><br><span class="line">   }</span><br><span class="line">}</span><br><span class="line">//类二</span><br><span class="line">public class ClassB {</span><br><span class="line">    public int age(){</span><br><span class="line">        return 25;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">//类三</span><br><span class="line">public class MainExample{</span><br><span class="line">   private class Test1 extends ClassA{</span><br><span class="line">        public String name(){</span><br><span class="line">          return super.name();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    private class Test2 extends ClassB{</span><br><span class="line">       public int age(){</span><br><span class="line">         return super.age();</span><br><span class="line">       }</span><br><span class="line">    }</span><br><span class="line">   public String name(){</span><br><span class="line">    return new Test1().name();</span><br><span class="line">   }</span><br><span class="line">   public int age(){</span><br><span class="line">       return new Test2().age();</span><br><span class="line">   }</span><br><span class="line">   public static void main(String args[]){</span><br><span class="line">       MainExample mi=new MainExample();</span><br><span class="line">       System.out.println("姓名:"+mi.name());</span><br><span class="line">       System.out.println("年龄:"+mi.age());</span><br><span class="line">   }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">//类一</span><br><span class="line">public class ClassA &#123;</span><br><span class="line">   public String name()&#123;</span><br><span class="line">       return &quot;liutao&quot;;</span><br><span class="line">   &#125;</span><br><span class="line">   public String doSomeThing()&#123;</span><br><span class="line">    // doSomeThing</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">//类二</span><br><span class="line">public class ClassB &#123;</span><br><span class="line">    public int age()&#123;</span><br><span class="line">        return 25;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//类三</span><br><span class="line">public class MainExample&#123;</span><br><span class="line">   private class Test1 extends ClassA&#123;</span><br><span class="line">        public String name()&#123;</span><br><span class="line">          return super.name();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    private class Test2 extends ClassB&#123;</span><br><span class="line">       public int age()&#123;</span><br><span class="line">         return super.age();</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   public String name()&#123;</span><br><span class="line">    return new Test1().name();</span><br><span class="line">   &#125;</span><br><span class="line">   public int age()&#123;</span><br><span class="line">       return new Test2().age();</span><br><span class="line">   &#125;</span><br><span class="line">   public static void main(String args[])&#123;</span><br><span class="line">       MainExample mi=new MainExample();</span><br><span class="line">       System.out.println(&quot;姓名:&quot;+mi.name());</span><br><span class="line">       System.out.println(&quot;年龄:&quot;+mi.age());</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们可以通过上面的例子看出来，MainExample类中的两个内部类分别继承了ClassA和ClassB，MainExample类通过这两个内部类间接实现了和ClassA还有ClassB的继承关系，而且我们也不用去关心ClassA的doSomeThing方法的实现，这是我们通过内部类实现多继承比实现接口更好的地方。</p>
 <h2 id="4-当想要定义一个回调函数并且不想编写大量代码时，使用匿名内部类比较便捷"><a href="#4-当想要定义一个回调函数并且不想编写大量代码时，使用匿名内部类比较便捷" class="headerlink" title="4.当想要定义一个回调函数并且不想编写大量代码时，使用匿名内部类比较便捷"></a>4.当想要定义一个回调函数并且不想编写大量代码时，使用匿名内部类比较便捷</h2><p>我们用通俗讲解就是说在Java中，通常就是编写一个接口，然后你来实现这个接口，然后把这个接口的一个对象作以参数的形式传到另一个程序方法中， 然后通过接口调用你的方法，匿名内部类就可以很好的展现了这一种回调功能</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public interface Demo {</span><br><span class="line">    void demoMethod();</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">public class MyDemo{</span><br><span class="line">    public test(Demo demo){</span><br><span class="line">	    System.out.println("test method");</span><br><span class="line">    }</span><br><span class="line">  </span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">	    MyDemo md = new MyDemo();</span><br><span class="line">	    //这里我们使用匿名内部类的方式将接口对象作为参数传递到test方法中去了</span><br><span class="line">	    md.test(new Demo){</span><br><span class="line">		    public void demoMethod(){</span><br><span class="line">		  	  System.out.println("具体实现接口")</span><br><span class="line">		    }</span><br><span class="line">	    }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public interface Demo &#123;</span><br><span class="line">    void demoMethod();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class MyDemo&#123;</span><br><span class="line">    public test(Demo demo)&#123;</span><br><span class="line">	    System.out.println(&quot;test method&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">	    MyDemo md = new MyDemo();</span><br><span class="line">	    //这里我们使用匿名内部类的方式将接口对象作为参数传递到test方法中去了</span><br><span class="line">	    md.test(new Demo)&#123;</span><br><span class="line">		    public void demoMethod()&#123;</span><br><span class="line">		  	  System.out.println(&quot;具体实现接口&quot;)</span><br><span class="line">		    &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="内部类的分类"><a href="#内部类的分类" class="headerlink" title="内部类的分类"></a>内部类的分类</h1><h2 id="1-局部内部类"><a href="#1-局部内部类" class="headerlink" title="1.局部内部类"></a>1.局部内部类</h2><div class="note default"><p>如果一个内部类只在一个方法中使用到了，那么我们可以将这个类定义在方法内部，这种内部类被称为局部内部类。其作用域仅限于该方法。</p></div>
 
@@ -484,10 +399,10 @@
 
 <p>局部类只能访问他所在的方法的final局部变量，如果我们访问了非final变量，编译器会提示你讲变量声明为final。局部变量的声明周期与局部内部类的对象的生命周期不一致。局部变量当所处的函数执行结束后就已经死亡了，但是局部内部类对象还可能一直存在(只要有人还引用该对象)，这就是会出现了一个悲剧的结果，局部内部类对象访问一个已经不存在的局部变量。那么编译器会将外部的final变量在编译阶段就作为内部类的成员变量写入内部类</p>
 <p>原始类：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class S2 {</span><br><span class="line"> </span><br><span class="line">    public void outerDoSomething() {</span><br><span class="line">        final String localObj = "hello";</span><br><span class="line">        class InnerClass {</span><br><span class="line">            public void innerDoSomething() {</span><br><span class="line">                String a = localObj;</span><br><span class="line">                System.out.println(a);</span><br><span class="line">            }</span><br><span class="line">        };</span><br><span class="line"> </span><br><span class="line">        InnerClass innerObj = new InnerClass();</span><br><span class="line">        innerObj.innerDoSomething();</span><br><span class="line">    }</span><br><span class="line"> </span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">        S2 s2 = new S2();</span><br><span class="line">        s2.outerDoSomething();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class S2 &#123;</span><br><span class="line"> </span><br><span class="line">    public void outerDoSomething() &#123;</span><br><span class="line">        final String localObj = &quot;hello&quot;;</span><br><span class="line">        class InnerClass &#123;</span><br><span class="line">            public void innerDoSomething() &#123;</span><br><span class="line">                String a = localObj;</span><br><span class="line">                System.out.println(a);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"> </span><br><span class="line">        InnerClass innerObj = new InnerClass();</span><br><span class="line">        innerObj.innerDoSomething();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        S2 s2 = new S2();</span><br><span class="line">        s2.outerDoSomething();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>编译之后的class文件：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class S2 {</span><br><span class="line">    public S2() {</span><br><span class="line">    }</span><br><span class="line"> </span><br><span class="line">    public void outerDoSomething() {</span><br><span class="line">        String localObj = "hello";</span><br><span class="line">        class InnerClass {</span><br><span class="line">            InnerClass() {</span><br><span class="line">            }</span><br><span class="line"> </span><br><span class="line">            public void innerDoSomething() {</span><br><span class="line">                String a = "hello";</span><br><span class="line">                System.out.println(a);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"> </span><br><span class="line">        InnerClass innerObj = new InnerClass();</span><br><span class="line">        innerObj.innerDoSomething();</span><br><span class="line">    }</span><br><span class="line"> </span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">        S2 s2 = new S2();</span><br><span class="line">        s2.outerDoSomething();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class S2 &#123;</span><br><span class="line">    public S2() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public void outerDoSomething() &#123;</span><br><span class="line">        String localObj = &quot;hello&quot;;</span><br><span class="line">        class InnerClass &#123;</span><br><span class="line">            InnerClass() &#123;</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">            public void innerDoSomething() &#123;</span><br><span class="line">                String a = &quot;hello&quot;;</span><br><span class="line">                System.out.println(a);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        InnerClass innerObj = new InnerClass();</span><br><span class="line">        innerObj.innerDoSomething();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        S2 s2 = new S2();</span><br><span class="line">        s2.outerDoSomething();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>所以访问外部的final变量，在编译器就放入内部类了，与外部无关。所以访问安全。</p>
 <h2 id="2-成员内部类"><a href="#2-成员内部类" class="headerlink" title="2.成员内部类"></a>2.成员内部类</h2><div class="note default"><p>成员内部类就是最普通的内部类，它定义在一个类的内部中，就如同一个成员变量一样。</p></div>
@@ -503,7 +418,7 @@
 
 
 <h2 id="3-匿名内部类"><a href="#3-匿名内部类" class="headerlink" title="3.匿名内部类"></a>3.匿名内部类</h2><p>我们先来看一段最常见的代码</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">Car jeep = new Car();</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Car jeep = new Car();</span><br></pre></td></tr></table></figure>
 
 <p>在Java中，可以将jeep抽象的理解为Car对象的”名字”，而匿名内部类顾名思义可以抽象的理解为没有名字的”内部类”</p>
 <p>匿名内部类的特点：</p>
@@ -518,32 +433,14 @@
 </ol></div>
 
 <p>现在我们来看一个匿名内部类：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class Button {</span><br><span class="line">    public void click(final int params){</span><br><span class="line">        //匿名内部类，实现的是ActionListener接口</span><br><span class="line">        new ActionListener(){</span><br><span class="line">            public void onAction(){</span><br><span class="line">                System.out.println("click action..." + params);</span><br><span class="line">            }</span><br><span class="line">        }.onAction();</span><br><span class="line">    }</span><br><span class="line">    //匿名内部类必须继承或实现一个已有的接口</span><br><span class="line">    public interface ActionListener{</span><br><span class="line">        public void onAction();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">        Button button=new Button();</span><br><span class="line">        button.click();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Button &#123;</span><br><span class="line">    public void click(final int params)&#123;</span><br><span class="line">        //匿名内部类，实现的是ActionListener接口</span><br><span class="line">        new ActionListener()&#123;</span><br><span class="line">            public void onAction()&#123;</span><br><span class="line">                System.out.println(&quot;click action...&quot; + params);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.onAction();</span><br><span class="line">    &#125;</span><br><span class="line">    //匿名内部类必须继承或实现一个已有的接口</span><br><span class="line">    public interface ActionListener&#123;</span><br><span class="line">        public void onAction();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Button button=new Button();</span><br><span class="line">        button.click();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>匿名内部类在开发中的使用：</p>
 <p>我们在开发的时候，会看到抽象类，或者接口作为参数。而这个时候，实际需要的是一个子类对象。如果该方法仅仅调用一次，我们就可以使用匿名内部类的格式简化。</p>
 <h2 id="4-静态内部类"><a href="#4-静态内部类" class="headerlink" title="4.静态内部类"></a>4.静态内部类</h2><p>对于一般的类，我们知道是不能使用static来修饰的，但是成员内部类可以看做外部类中的一个成员，所以可以用static修饰，这种用static修饰的内部类我们称作静态内部类,也称作嵌套内部类.</p>
 <p>特点：<br>    - 不能使用外部类的非static成员变量和成员方法，只能访问静态的外部属性和方法<br>    - 非静态内部类编译后会默认的保存一个指向外部类的引用，而静态类却没有</p>
 <p>一个静态内部类    </p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">class Outter {</span><br><span class="line">    int age = 10;</span><br><span class="line">    static age2 = 20;</span><br><span class="line">    public Outter() {        </span><br><span class="line">    }</span><br><span class="line">     </span><br><span class="line">    static class Inner {</span><br><span class="line">        public method() {</span><br><span class="line">            System.out.println(age);//错误</span><br><span class="line">            System.out.println(age2);//正确</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line">  ​</span><br><span class="line">public class Test {</span><br><span class="line">    public static void main(String[] args)  {</span><br><span class="line">        Outter.Inner inner = new Outter.Inner();</span><br><span class="line">        inner.method();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure><script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Outter &#123;</span><br><span class="line">    int age = 10;</span><br><span class="line">    static age2 = 20;</span><br><span class="line">    public Outter() &#123;        </span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    static class Inner &#123;</span><br><span class="line">        public method() &#123;</span><br><span class="line">            System.out.println(age);//错误</span><br><span class="line">            System.out.println(age2);//正确</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">  ​</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args)  &#123;</span><br><span class="line">        Outter.Inner inner = new Outter.Inner();</span><br><span class="line">        inner.method();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>Java基础</category>
       </categories>
@@ -555,9 +452,9 @@
   <entry>
     <title>为什么Java中只有值传递</title>
     <url>/2019/10/25/%E4%B8%BA%E4%BB%80%E4%B9%88Java%E4%B8%AD%E5%8F%AA%E6%9C%89%E5%80%BC%E4%BC%A0%E9%80%92/</url>
-    <content><![CDATA[<h1 id="JAVA中的参数传递"><a href="#JAVA中的参数传递" class="headerlink" title="JAVA中的参数传递"></a>JAVA中的参数传递</h1><p><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8">❓</span>&nbsp;&nbsp;&nbsp;在JAVA的学习中，我们或许经常性的会遇到把对象作为一个参数传递给方法，那么自然就会产生一个问题，这到底是值传递，还是引用传递呢？<br><br>或许很多人都会觉得是引用传递，但其实我们都错了！</p>
+    <content><![CDATA[<h1 id="JAVA中的参数传递"><a href="#JAVA中的参数传递" class="headerlink" title="JAVA中的参数传递"></a>JAVA中的参数传递</h1><p>:question:&nbsp;&nbsp;&nbsp;在JAVA的学习中，我们或许经常性的会遇到把对象作为一个参数传递给方法，那么自然就会产生一个问题，这到底是值传递，还是引用传递呢？</br><br>或许很多人都会觉得是引用传递，但其实我们都错了！</p>
 <a id="more"></a>
-<p><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/2714.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/2714.png?v8">✔</span>答案是：<strong>对象作为参数传递是值传递，并且在JAVA中，<span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/2757.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png?v8">❗</span><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/2757.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png?v8">❗</span><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/2757.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/2757.png?v8">❗</span>只有按值传递，没有按引用传递！</strong></p>
+<p>:heavy_check_mark:答案是：<strong>对象作为参数传递是值传递，并且在JAVA中，:heavy_exclamation_mark::heavy_exclamation_mark::heavy_exclamation_mark:只有按值传递，没有按引用传递！</strong></p>
 <hr>
 <p>我们在解释为什么之前，先来看看<strong>形参</strong>是什么，<strong>实参</strong>是什么，什么是<strong>值传递</strong>，什么又是<strong>引用传递</strong></p>
 <p><strong>形参：是在定义函数名和函数体的时候使用的参数,目的是用来接收调用该函数时传入的参数。</strong></p>
@@ -565,23 +462,23 @@
 <p><strong>值传递（pass by value）：在调用函数时将实际参数复制一份传递到函数中，这样在函数中如果对参数进行修改，将不会影响到实际参数。</strong></p>
 <p><strong>引用传递（pass by reference）：在调用函数时将实际参数的地址直接传递到函数中，那么在函数中对参数所进行的修改，将影响到实际参数。</strong></p>
 <hr>
-<p>在弄清楚了这些概念之后，我们现在通过代码实践的方式，来看看JAVA中到底为什么是值传递<span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8">❓</span><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8">❓</span><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8">❓</span></p>
-<p>首先我们来看这样一段代码：<br><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/0031-20e3.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/0031-20e3.png?v8">1⃣</span></p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class Test {</span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">        Test test = new Test();</span><br><span class="line">        int i = 1;</span><br><span class="line">        test.change(i);</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void change(int i){</span><br><span class="line">        i = 2;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>在弄清楚了这些概念之后，我们现在通过代码实践的方式，来看看JAVA中到底为什么是值传递:question::question::question:</p>
+<p>首先我们来看这样一段代码：<br>:one:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Test test = new Test();</span><br><span class="line">        int i = 1;</span><br><span class="line">        test.change(i);</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void change(int i)&#123;</span><br><span class="line">        i = 2;</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行结果：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">2</span><br><span class="line">1</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
 
-<p>从这个运行结果来看，change方法内改变i的值并没有影响到mian方法中的i，由此来看应该是值传递，那我们在来看一段实例代码<br></p>
-<p><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/0032-20e3.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/0032-20e3.png?v8">2⃣</span></p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class Test {</span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">        Test test = new Test();</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setName("first");</span><br><span class="line">        test.change(user);</span><br><span class="line">        System.out.println("main方法内的name：" + user.name);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">        public void change(User user){</span><br><span class="line">        user.setName("second");</span><br><span class="line">        System.out.println("change方法内的name："+user.name);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>从这个运行结果来看，change方法内改变i的值并没有影响到mian方法中的i，由此来看应该是值传递，那我们在来看一段实例代码</br></p>
+<p>:two:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Test test = new Test();</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setName(&quot;first&quot;);</span><br><span class="line">        test.change(user);</span><br><span class="line">        System.out.println(&quot;main方法内的name：&quot; + user.name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">        public void change(User user)&#123;</span><br><span class="line">        user.setName(&quot;second&quot;);</span><br><span class="line">        System.out.println(&quot;change方法内的name：&quot;+user.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这是运行结果：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">change方法内的name：second</span><br><span class="line">main方法内的name：second</span><br></pre></td></tr></tbody></table></figure>
-<p>从这样的结果来看，在change方法体内对user对象进行的操作也已经改变了main方法体内的user对象，那么就此结果来说JAVA看上去又像是可以引用传递的，但是这里有一段代码却提出了疑问<br></p>
-<p><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/0033-20e3.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/0033-20e3.png?v8">3⃣</span></p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class Test {</span><br><span class="line">    public static void main(String[] args) {</span><br><span class="line">        Test test = new Test();</span><br><span class="line">        String name = "first";</span><br><span class="line">        test.change(name);</span><br><span class="line">        System.out.println(name);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void change(String name){</span><br><span class="line">        name = "second";</span><br><span class="line">        System.out.println(name);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">change方法内的name：second</span><br><span class="line">main方法内的name：second</span><br></pre></td></tr></table></figure>
+<p>从这样的结果来看，在change方法体内对user对象进行的操作也已经改变了main方法体内的user对象，那么就此结果来说JAVA看上去又像是可以引用传递的，但是这里有一段代码却提出了疑问</br></p>
+<p>:three:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Test test = new Test();</span><br><span class="line">        String name = &quot;first&quot;;</span><br><span class="line">        test.change(name);</span><br><span class="line">        System.out.println(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void change(String name)&#123;</span><br><span class="line">        name = &quot;second&quot;;</span><br><span class="line">        System.out.println(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行结果：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">second</span><br><span class="line">first</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">second</span><br><span class="line">first</span><br></pre></td></tr></table></figure>
 <p>这样的运行结果，让我们看起来JAVA又是值传递，那么我们到底该作何解释呢？</p>
 <h4 id="JAVA中的值传递"><a href="#JAVA中的值传递" class="headerlink" title="JAVA中的值传递"></a>JAVA中的值传递</h4><table>
 <thead>
@@ -619,26 +516,8 @@
 <p><img src="5.png" alt=""></p>
 <p>在第二段代码中，在change方法内user指向的地址没有发生改变，所以它的修改对main方法内的user产生了影响，在第三段代码中，name指向的内存地址已经发生了改变，所以不管change方法内怎么变化，不会影响到main方法中的name</p>
 <p><strong>所以，值传递和引用传递的区别并不是传递的内容。而是实参到底有没有被复制一份给形参。</strong>在判断实参内容有没有受影响的时候，要看传的的是什么，如果你传递的是个地址，那么就看这个地址的变化会不会有影响，而不是看地址指向的对象的变化。就像钥匙和房子的关系。</p>
-<p><span class="github-emoji" style="color: transparent;background:no-repeat url(https://github.githubassets.com/images/icons/emoji/unicode/1f3c1.png?v8) center/contain" data-src="https://github.githubassets.com/images/icons/emoji/unicode/1f3c1.png?v8">🏁</span><strong>所以说，Java中其实还是值传递的，只不过对于对象参数，值的内容是对象地址的引用。</strong></p>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
+<p>:checkered_flag:<strong>所以说，Java中其实还是值传递的，只不过对于对象参数，值的内容是对象地址的引用。</strong></p>
+]]></content>
       <categories>
         <category>Java基础</category>
       </categories>
@@ -653,29 +532,29 @@
 <h2 id="包装类型值可以为NULL，但是基本类型不可以"><a href="#包装类型值可以为NULL，但是基本类型不可以" class="headerlink" title="包装类型值可以为NULL，但是基本类型不可以"></a>包装类型值可以为NULL，但是基本类型不可以</h2><p>因为包装类型可以为NULL这一特点，使得包装类型可以应用于POJO类中，但是基本类型不可以。</p>
 <p>这里POJO的全称为<span class="label default">Plain Ordinary Java</span>,也就是无规则的Java对象，只有属性字段以及相应的setter和getter方法，比如：</p>
 <a id="more"></a>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public class User {</span><br><span class="line">    private Integer id;</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    public Integer getId() {</span><br><span class="line">        return id;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void setId(Integer id) {</span><br><span class="line">        this.id = id;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public String getName() {</span><br><span class="line">        return name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    public void setName(String name) {</span><br><span class="line">        this.name = name;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public class User &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>与POJO相类似的还有数据传输对象DTO(Data Transfer Object，泛指用于展示层与服务层之间的数据传输对象)、视图对象VO(View Object，把某个页面的数据封装起来)、持久化对象PO(Persistant Object,可以看成是与数据库中的表映射的Java对象)</p>
 <p>包装数据类型的默认初始值是null，而基本数据类型的默认初始值则不是，比如int初始值为0，double初始值为0.0，等等，在数据库中，所有SQL默认值都是null，如果我们把POJO中的映射属性类型写为基本类型，当查找不到记录的时候，返回null赋给基本类型就会出错，这个时候我们只有使用包装类型才能保证不会出现这样的错误</p>
 <p>在《阿里巴巴的Java开发手册中》有这样的说明</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">数据库的查询结果可能是null，如果使用基本类型的话，因为要自动拆箱(将包装类型转化为基本类型，比如说把Integer对象转化为int值)，</span><br><span class="line"></span><br><span class="line">就会抛出NPE(NullPointerException)的异常</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">数据库的查询结果可能是null，如果使用基本类型的话，因为要自动拆箱(将包装类型转化为基本类型，比如说把Integer对象转化为int值)，</span><br><span class="line"></span><br><span class="line">就会抛出NPE(NullPointerException)的异常</span><br></pre></td></tr></table></figure>
 
 <p>所以在阿里巴巴的Java开发手册中强制规定了基本数据类型和包装数据类型的使用标准如下：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">（1） 所有的POJO类属性必须使用包装数据类型。</span><br><span class="line"></span><br><span class="line">（2） RPC方法的返回值和参数必须使用包装数据类型。</span><br><span class="line"></span><br><span class="line">（3） 所有的局部变量推荐使用基本数据类型。</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">（1） 所有的POJO类属性必须使用包装数据类型。</span><br><span class="line"></span><br><span class="line">（2） RPC方法的返回值和参数必须使用包装数据类型。</span><br><span class="line"></span><br><span class="line">（3） 所有的局部变量推荐使用基本数据类型。</span><br></pre></td></tr></table></figure>
 
 <h2 id="包装类型可以用在泛型之中，但是基本类型不可以"><a href="#包装类型可以用在泛型之中，但是基本类型不可以" class="headerlink" title="包装类型可以用在泛型之中，但是基本类型不可以"></a>包装类型可以用在泛型之中，但是基本类型不可以</h2><p>泛型不能使用基本类型，如果使用了基本类型，那么在编译的时候将会报错</p>
 <p>错误写法：</p>
-<div class="note danger"><p>List<int> list = new ArrayList&lt;&gt;();</int></p></div>
+<div class="note danger"><p>List<int> list = new ArrayList&lt;&gt;();</p></div>
 
 <p>正确写法：</p>
-<div class="note default"><p>List<integer> list = new ArrayList&lt;&gt;();</integer></p></div>
+<div class="note default"><p>List<Integer> list = new ArrayList&lt;&gt;();</p></div>
 
 <p>造成这种结果的原因是因为泛型在编译时会进行类型擦除，最后只保留原始类型，而原始类型只能是Object及其子类。</p>
 <h2 id="基本类型相较于包装类型更加的高效"><a href="#基本类型相较于包装类型更加的高效" class="headerlink" title="基本类型相较于包装类型更加的高效"></a>基本类型相较于包装类型更加的高效</h2><p>基本类型相较于包装类型更加的高效，因为基本类型在栈中直接储存的具体数值，而包装类型则在栈中储存的是对堆中的引用(即在堆中的地址)</p>
 <p><img src="stack_and_heap.jpg" alt=""></p>
 <p>很显然，包装类型在堆中还要占用内存，它需要占据更多的内存空间，对于我们经常要用到的局部变量来说，每次如果都要new一个包装类型就会显得十分的笨重，所以在阿里巴巴Java开发手册中，对于局部变量更加推荐使用基本数据类型</p>
 <h2 id="两个包装类型的值可以相同，但是却不相等"><a href="#两个包装类型的值可以相同，但是却不相等" class="headerlink" title="两个包装类型的值可以相同，但是却不相等"></a>两个包装类型的值可以相同，但是却不相等</h2><p>首先我们来看一段代码</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">Integer a = new Integer(10);</span><br><span class="line">Integer b = new Integer(10);</span><br><span class="line"></span><br><span class="line">System.out.println(a == b);   //输出为false</span><br><span class="line">System.out.println(a.equals(b));    //输出为true</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Integer a = new Integer(10);</span><br><span class="line">Integer b = new Integer(10);</span><br><span class="line"></span><br><span class="line">System.out.println(a == b);   //输出为false</span><br><span class="line">System.out.println(a.equals(b));    //输出为true</span><br></pre></td></tr></table></figure>
 
 <p>使用“==”的时候，我们比较的是栈内存中的内容，所以对于类对象，使用“==”比较的是他们在内存中指向的地址是否相同，而对于基本数据类型，使用“==”则比较的是他们的值是否相同，所以第一个结果是false</p>
 <p>使用equals函数进行比较则比较的是他们的值，所以第二个结果是ture</p>
@@ -691,7 +570,7 @@
 <div class="note default"><p>Integer integer = Integer.valueOf(10);<br>int i = integer.intValue();</p></div>
 
 <p>现在我们来看三段代码</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">// 基本类型和包装类型的比较</span><br><span class="line">int a = 100;</span><br><span class="line">Integer b = 100;</span><br><span class="line">System.out.println(a == b);</span><br><span class="line"></span><br><span class="line">// 两个包装类型的比较</span><br><span class="line">Integer c = 100;              //这里和第四点不一样的赋值不一样哦</span><br><span class="line">Integer d = 100;</span><br><span class="line">System.out.println(c == d);</span><br><span class="line"></span><br><span class="line">// 两个基本类型的比较</span><br><span class="line">c = 200;</span><br><span class="line">d = 200;</span><br><span class="line">System.out.println(c == d);</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 基本类型和包装类型的比较</span><br><span class="line">int a = 100;</span><br><span class="line">Integer b = 100;</span><br><span class="line">System.out.println(a == b);</span><br><span class="line"></span><br><span class="line">// 两个包装类型的比较</span><br><span class="line">Integer c = 100;              //这里和第四点不一样的赋值不一样哦</span><br><span class="line">Integer d = 100;</span><br><span class="line">System.out.println(c == d);</span><br><span class="line"></span><br><span class="line">// 两个基本类型的比较</span><br><span class="line">c = 200;</span><br><span class="line">d = 200;</span><br><span class="line">System.out.println(c == d);</span><br></pre></td></tr></table></figure>
 
 <p>第一段：<strong>基本类型</strong>和<strong>包装类型</strong>的比较</p>
 <div class="note primary"><p>结果：true</p></div>
@@ -704,9 +583,9 @@
 
 <p>这三次比较的结果是true，true，false，可能你会有点意外，现在我们来看看这是为什么？</p>
 <p>通过前面我们观察自动拆装箱的反编译结果，我们可以知道，自动装箱是通过<span class="label default">Integer.valueOf</span>完成的，那我们就来看看这个方法的源码</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">public static Integer valueOf(int i) {</span><br><span class="line">    if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        return IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    return new Integer(i);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public static Integer valueOf(int i) &#123;</span><br><span class="line">    if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        return IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    return new Integer(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从这个方法的源码中我们可以明显的看到IntegerCache起到了很重要的作用，那这个时候我们又来看看IntegerCache是什么：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="code"><pre><span class="line">private static class IntegerCache {</span><br><span class="line">    static final int low = -128;</span><br><span class="line">    static final int high;</span><br><span class="line">    static final Integer cache[];</span><br><span class="line"></span><br><span class="line">    static {</span><br><span class="line">        // high value may be configured by property</span><br><span class="line">        int h = 127;</span><br><span class="line">        int i = parseInt(integerCacheHighPropValue);</span><br><span class="line">        i = Math.max(i, 127);</span><br><span class="line">        h = Math.min(i, Integer.MAX_VALUE - (-low) -1);</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = new Integer[(high - low) + 1];</span><br><span class="line">        int j = low;</span><br><span class="line">        for(int k = 0; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = new Integer(j++);</span><br><span class="line"></span><br><span class="line">        // range [-128, 127] must be interned (JLS7 5.1.7)</span><br><span class="line">        assert IntegerCache.high &gt;= 127;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">private static class IntegerCache &#123;</span><br><span class="line">    static final int low = -128;</span><br><span class="line">    static final int high;</span><br><span class="line">    static final Integer cache[];</span><br><span class="line"></span><br><span class="line">    static &#123;</span><br><span class="line">        // high value may be configured by property</span><br><span class="line">        int h = 127;</span><br><span class="line">        int i = parseInt(integerCacheHighPropValue);</span><br><span class="line">        i = Math.max(i, 127);</span><br><span class="line">        h = Math.min(i, Integer.MAX_VALUE - (-low) -1);</span><br><span class="line">        high = h;</span><br><span class="line"></span><br><span class="line">        cache = new Integer[(high - low) + 1];</span><br><span class="line">        int j = low;</span><br><span class="line">        for(int k = 0; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = new Integer(j++);</span><br><span class="line"></span><br><span class="line">        // range [-128, 127] must be interned (JLS7 5.1.7)</span><br><span class="line">        assert IntegerCache.high &gt;= 127;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>从这段代码中我们可以看出-128到127之间的数会从IntegerCache中取值，<strong>即对于-128到127之间的数，会进行缓存，例如Integer i = 127时，会将127进行缓存，下次在写Integer j = 127的时候，就会直接从缓存中取，就不会new了，如果超过128就会重新new一个对象</strong></p>
 <div class="note default"><p>所以在我们这个问题中:</p>
@@ -718,26 +597,8 @@
 <blockquote class="blockquote-center"><p>当需要进行自动装箱的时候，如果数字在-128到127之间，会直接使用缓存中的对象，而不是重新创建一个对象，如果数字大于或者小于这两个，那么是会重新创建一个对象的</p>
 </blockquote>
 
-<p>Ps:<br><br>本文参考自：<a href="https://juejin.im/post/5d8ff563f265da5bb252de76" target="_blank" rel="noopener">https://juejin.im/post/5d8ff563f265da5bb252de76</a></p>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>]]></content>
+<p>Ps:</br><br>本文参考自：<a href="https://juejin.im/post/5d8ff563f265da5bb252de76" target="_blank" rel="noopener">https://juejin.im/post/5d8ff563f265da5bb252de76</a></p>
+]]></content>
       <categories>
         <category>Java基础</category>
       </categories>

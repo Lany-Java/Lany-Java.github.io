@@ -87,18 +87,18 @@
 
 
 
-<meta name="description" content="我们都知道TCP建立连接（三次握手）时，需要进行三次报文交换，当客户端发起连接请求，服务器进行确认回应时，为什么这时客户端还要发起一次确认呢？ 我们现在就来看看TCP的执行流程">
+<meta name="description" content="为什么不是两次握手？ 我们都知道TCP建立连接（三次握手）时，需要进行三次报文交换，当客户端Client发起连接请求，服务器Server进行确认回应时，为什么这时Client还要发起一次握手呢？  我们现在就来看看TCP建立连接的执行流程">
 <meta name="keywords" content="计算机网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="三次握手为什么要发送最后一次确认?">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B&#x2F;index.html">
+<meta property="og:title" content="为什么不是两次或者4次握手而是三次握手呢？">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;26&#x2F;%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%98%AF%E4%B8%A4%E6%AC%A1%E6%88%96%E8%80%854%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%80%8C%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F&#x2F;index.html">
 <meta property="og:site_name" content="Lany&#39;s Blog">
-<meta property="og:description" content="我们都知道TCP建立连接（三次握手）时，需要进行三次报文交换，当客户端发起连接请求，服务器进行确认回应时，为什么这时客户端还要发起一次确认呢？ 我们现在就来看看TCP的执行流程">
+<meta property="og:description" content="为什么不是两次握手？ 我们都知道TCP建立连接（三次握手）时，需要进行三次报文交换，当客户端Client发起连接请求，服务器Server进行确认回应时，为什么这时Client还要发起一次握手呢？  我们现在就来看看TCP建立连接的执行流程">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
-<meta property="og:updated_time" content="2019-11-25T13:53:44.647Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;26&#x2F;%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%98%AF%E4%B8%A4%E6%AC%A1%E6%88%96%E8%80%854%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%80%8C%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+<meta property="og:updated_time" content="2019-11-27T06:09:38.177Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;25&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;26&#x2F;%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%98%AF%E4%B8%A4%E6%AC%A1%E6%88%96%E8%80%854%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%80%8C%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F&#x2F;%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
 
 
 
@@ -128,14 +128,14 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/11/25/三次握手为什么要发送最后一次握手/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/11/26/为什么不是两次或者4次握手而是三次握手呢？/"/>
 
 
 
 
 
 
-  <title>三次握手为什么要发送最后一次确认? | Lany's Blog</title>
+  <title>为什么不是两次或者4次握手而是三次握手呢？ | Lany's Blog</title>
   
 
 
@@ -316,7 +316,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/25/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/26/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%98%AF%E4%B8%A4%E6%AC%A1%E6%88%96%E8%80%854%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%80%8C%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Lany">
@@ -333,7 +333,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">三次握手为什么要发送最后一次确认?</h1>
+          <h1 class="post-title" itemprop="name headline">为什么不是两次或者4次握手而是三次握手呢？</h1>
         
 
         <div class="post-meta">
@@ -345,8 +345,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-25T20:38:08+08:00">
-                2019-11-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-26T11:31:38+08:00">
+                2019-11-26
               </time>
             
 
@@ -385,7 +385,7 @@
 
           
           
-             <span id="/2019/11/25/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8F%91%E9%80%81%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B/" class="leancloud_visitors" data-flag-title="三次握手为什么要发送最后一次确认?">
+             <span id="/2019/11/26/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E6%98%AF%E4%B8%A4%E6%AC%A1%E6%88%96%E8%80%854%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%80%8C%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%91%A2%EF%BC%9F/" class="leancloud_visitors" data-flag-title="为什么不是两次或者4次握手而是三次握手呢？">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -410,7 +410,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  703 字
+                  1.3k 字
                 </span>
               
 
@@ -426,7 +426,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2 分钟
+                  4 分钟
                 </span>
               
             </div>
@@ -447,39 +447,44 @@
       
 
       
-        <p>我们都知道TCP建立连接（三次握手）时，需要进行三次报文交换，当客户端发起连接请求，服务器进行确认回应时，为什么这时客户端还要发起一次确认呢？</p>
-<p>我们现在就来看看TCP的执行流程</p>
+        <h1 id="为什么不是两次握手？"><a href="#为什么不是两次握手？" class="headerlink" title="为什么不是两次握手？"></a>为什么不是两次握手？</h1></br>
+我们都知道TCP建立连接（三次握手）时，需要进行三次报文交换，当客户端Client发起连接请求，服务器Server进行确认回应时，为什么这时Client还要发起一次握手呢？
+
+<p>我们现在就来看看TCP建立连接的执行流程</p>
 <a id="more"></a>
 <p><img src="%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt=""></p>
-<p>我们首先来看Client端发起了第一次握手，请求建立连接</p>
-<p>Server端在接收到连接请求后，回复确认连接报文</p>
-<p>这时候我们来想一想在前两次握手中可能有哪些情况？</p>
+<p>我们首先来看Client发起了第一次握手，请求建立连接,Server在接收到连接请求后，回复确认连接报文</p>
+<p>这时候我们来想一想在前两次握手中可能有哪些异常情况？</p>
 <ol>
-<li>正常到达，这种情况不用管</li>
-<li>Client发出请求，但是连接请求报文丢失，Client未收到来自Server的确认，这时Client重传一次连接请求，后来收到确认，建立了连接，数据传输完毕之后，关闭连接，这种情况也正常，不用管</li>
-<li>Client发出请求，连接请求报文不是丢失，而是因为网络堵塞长时间滞留了，以致延误到连接释放之后某个时间点才到达Server，本来这事一个早已经失效的报文段，但是Server在接收到此失效的报文段的时候，就会误以为Client发出了新的连接请求，于是就向Client发出确认报文段，同意建立连接，在这种情况下，Client并没有发送建立连接的请求，因此不会理会Server发送过来的确认报文段，但Server却以为连接已经建立了，就一直等待Client发来数据，Server的许多资源就这样被浪费了</li>
+<li>Client发出建立连接请求报文（第一次握手），但是连接请求报文丢失，Client未收到来自Server的确认，这时Client重传连接请求，直至后来收到来自Server的确认，建立连接，数据传输完毕之后，关闭连接。</li>
+<li>Client发出建立连接请求报文（第一次握手），连接请求报文顺利到达，但是Server的确认报文（第二次握手）在传输过程中丢失，Client未收到来自Server的确认报文，这时Client超时重传，直至收到来自Server的确认，建立连接，数据传输完毕之后，关闭连接。</li>
+<li>Client发出建立连接请求报文（第一次握手），连接请求报文不是丢失，而是因为网络堵塞长时间滞留了，以致延误到连接释放之后某个时间点才到达Server，本来这事一个早已经失效的报文段，但是Server在接收到此失效的报文段的时候，就会误以为Client发出了新的连接请求，于是就向Client发出确认报文段，同意建立连接，在这种情况下，Client并没有发送建立连接的请求，因此不会理会Server发送过来的确认报文段，但Server却以为连接已经建立了，就一直等待Client发来数据，Server的许多资源就这样被浪费了</li>
 </ol>
-<p>可以看出以上三种情况中，第三种情况如果不采取一定的机制去预防，那么就会造成一个无用的新连接的建立，以至于浪费许多的资源，所以为了解决这个问题，我们让Client端在接收到Server端的确认报文段之后，在向Server端发送一个报文段，进行最后一次握手。这时Server在发送自己的确认报文段之后，并没有从Client收到最后一次握手的报文段，那么Server端就知道这是异常情况，并不会建立连接，这种异常情况，就因为最后一次握手得以解决</p>
-<p><strong>看完以上我们知道了，客户端发起的最后一次握手是为了防止Client已失效的连接请求报文段突然又传送到了Server，导致Server误以为和Client的连接已经建立，因而产生错误，造成资源的浪费</strong></p>
-<script>
-        document.querySelectorAll('.github-emoji')
-          .forEach(el => {
-            if (!el.dataset.src) { return; }
-            const img = document.createElement('img');
-            img.style = 'display:none !important;';
-            img.src = el.dataset.src;
-            img.addEventListener('error', () => {
-              img.remove();
-              el.style.color = 'inherit';
-              el.style.backgroundImage = 'none';
-              el.style.background = 'none';
-            });
-            img.addEventListener('load', () => {
-              img.remove();
-            });
-            document.body.appendChild(img);
-          });
-      </script>
+<p>可以看出以上三种情况中，第三种情况如果不采取一定的机制去预防，那么就会造成一个无用的新连接的建立，以至于浪费许多的资源，所以为了解决这个问题，我们让Client在接收到Server的确认报文段之后，在向Server发送一个报文段，进行最后一次握手。这时Server在发送自己的确认报文段之后，并没有从Client收到最后一次握手的报文段，那么Server就知道这是异常情况，并不会建立连接，这种异常情况，就因为最后一次握手得以解决。<strong>所以第三次握手防止了已失效的连接请求报文突然传送到Server，从而产生错误</strong></p>
+<p>看完以上我们应该知道了，<strong>第三次握手是因为信道的不可靠性，而我们又要建立可靠连接发送可靠的数据，在端方建立的差错控制机制，以此来保证数据的可靠传输</strong>，因此第三次握手必不可少</p>
+<h1 id="为什么不是四次握手？"><a href="#为什么不是四次握手？" class="headerlink" title="为什么不是四次握手？"></a>为什么不是四次握手？</h1></br>
+以上我们知道了第三次传输必不可少，但是那我们为什么不使用四次握手呢？
+
+<p>现在让我们来看看如果是四次握手，那么它的执行流程是什么：</p>
+<ol>
+<li><strong>第一次握手：</strong>Client向Server发出连接请求报文，设置<strong>SYN=1，seq=x</strong></li>
+<li><strong>第二次握手：</strong>Server收到Client的连接请求，回发确认报文，设置<strong>SYN=1，ACK=1，ack=x+1</strong></li>
+<li><strong>第三次握手：</strong>Server向Client发送建立连接请求，设置<strong>SYN=1，seq=y</strong></li>
+<li><strong>第四次握手：</strong>Client收到Server的请求，回发确认报文，设置<strong>SYN=1，ACK=1，ack=y+1</strong></li>
+</ol>
+<p>从以上我们可以很明显的看出，第二次握手和第三次握手可以合并在一起，合并在一起之后，不就是我们三次握手的第二次握手吗？</p>
+<p><strong>二者可以进行合并，只使用三次握手，以提高连接效率，所以四次握手本质上也还是三次握手，并且效率还不如三次握手，我们自然不会采用四次握手</strong></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li><p>为什么不是两次握手？</p>
+<p> 因为信道是不可靠的，而TCP又是提供可靠的数据传输，既然信道无法做到数据的可靠传输，那么我们在端系统这一方来完成数据的可靠传输，第三次握手就是一种保证可靠传输的差错控制机制，是必不可少的。</p>
+</li>
+<li><p>为什么不是四次握手？</p>
+<p> 四次握手的中间两次是可以合并的，合并之后就是三次握手，还提升了连接效率</p>
+</li>
+<li><p>总的来说，<strong>三次握手就是一个理论上既保证了传输的可靠性，又保证了建立连接效率的最小握手次数。</strong></p>
+</li>
+</ol>
+
       
     </div>
     
@@ -576,8 +581,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -669,6 +683,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么不是两次握手？"><span class="nav-number">1.</span> <span class="nav-text">为什么不是两次握手？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么不是四次握手？"><span class="nav-number">2.</span> <span class="nav-text">为什么不是四次握手？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
